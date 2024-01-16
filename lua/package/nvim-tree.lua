@@ -1,7 +1,3 @@
-
-local TREE_HEIGHT_RATIO = 0.8
-local TREE_WIDTH_RATIO = 0.5
-
 M = {
   "nvim-tree/nvim-tree.lua",
   version = "*",
@@ -12,37 +8,57 @@ M = {
   config = function()
     require("nvim-tree").setup {
       view = {
-        float = {
-          enable = true,
-          open_win_config = function()
-            local screen_w = vim.opt.columns:get()
-            local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
-            local window_w = screen_w * TREE_WIDTH_RATIO
-            local window_h = screen_h * TREE_HEIGHT_RATIO
-            local window_w_int = math.floor(window_w)
-            local window_h_int = math.floor(window_h)
-            local center_x = (screen_w - window_w) / 2
-            local center_y = ((vim.opt.lines:get() - window_h) / 2)
-               - vim.opt.cmdheight:get()
-            return {
-              border = 'rounded',
-              relative = 'editor',
-              row = center_y,
-              col = center_x,
-              width = window_w_int,
-              height = window_h_int,
-            }
-            end,
-        },
-        width = function()
-          return math.floor(vim.opt.columns:get() * TREE_WIDTH_RATIO)
-        end,
+        side = "right",
+        width = 40
+      },
+
+      renderer = {
+        icons = {
+          git_placement = "after",
+          modified_placement = "after",
+          git = {
+            unstaged  = "U",
+            staged    = "A",
+            unmerged  = "M",
+            renamed   = "R",
+            untracked = "?",
+            deleted   = "D",
+            ignored   = "!"
+          }
+        }
+      },
+
+      filters = {
+        dotfiles = false
       },
 
       live_filter = {
         prefix = "[FILTER]: ",
         always_show_folders = false,
-      }
+      },
+
+      on_attach = function (bufnr)
+        local api = require "nvim-tree.api"
+
+        local function opts(desc)
+          return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+        end
+
+        -- api.config.mappings.default_on_attach(bufnr)
+        vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
+        vim.keymap.set('n', 'a', api.fs.create, opts('Create File Or Directory'))
+        vim.keymap.set('n', 'd', api.fs.remove, opts('Delete'))
+        vim.keymap.set('n', 'c', api.fs.copy.node, opts('Copy'))
+        vim.keymap.set('n', 'x', api.fs.cut, opts('Cut'))
+        vim.keymap.set('n', 'p', api.fs.paste, opts('Paste'))
+        vim.keymap.set('n', 'r', api.fs.rename, opts('Rename'))
+        vim.keymap.set('n', 'f', api.live_filter.start, opts('Live Filter: Start'))
+        vim.keymap.set('n', 'F', api.fs.copy.absolute_path, opts('Copy Absolute Path'))
+        vim.keymap.set('n', 'b', api.tree.toggle_no_buffer_filter, opts('Toggle Buffer Filter'))
+
+        vim.keymap.set('n', 'eq', api.tree.close, opts('Close'))
+        vim.keymap.set('n', 'g?', api.tree.toggle_help, opts('Help'))
+      end
     }
 
   end,

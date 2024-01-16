@@ -34,3 +34,6 @@ vim.cmd("highlight GitSignsAddLn guibg=#004400")
 vim.cmd("highlight GitSignsChangeLn guibg=#222200")
 -- Change the background color for deleted lines
 vim.cmd("highlight GitSignsDeleteLn guibg=#440000")
+
+
+vim.cmd("highlight DebugBreakpointLine guibg=#DC143C")

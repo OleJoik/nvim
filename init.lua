@@ -20,20 +20,24 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   {
     "kdheepak/lazygit.nvim",
-    -- optional for floating window border decoration
     dependencies = {
       "nvim-lua/plenary.nvim",
     }
   },
 
+  -- deletes buffers without fucking up the window layout
+  'famiu/bufdelete.nvim',
+
   "yamatsum/nvim-cursorline",
   "sindrets/diffview.nvim",
   "petertriho/nvim-scrollbar",
+  'theHamsta/nvim-dap-virtual-text',
 
   require("package.noice"),
 
-  require("package.nvim-tree"),
+  -- require("package.nvim-tree"),
 
+  require("package.neo-tree"),
 
   require("package.barbar"),
 
@@ -99,3 +103,5 @@ require('gitsigns').setup({})
 
 require("dap-python").setup('~/.virtualenvs/debugpy/bin/python')
 require('dap-python').test_runner = 'pytest'
+require("setup.dap")
+require("nvim-dap-virtual-text").setup()
