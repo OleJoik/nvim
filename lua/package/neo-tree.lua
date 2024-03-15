@@ -14,6 +14,7 @@ return {
         window = {
           mappings = {
             ["<cr>"] = "open",
+            ["<2-LeftMouse>"] = "open",
             ["a"] = "add",
             ["d"] = "delete",
             ["c"] = "copy_to_clipboard",
@@ -22,6 +23,7 @@ return {
             ["r"] = "rename",
             ["f"] = "fuzzy_finder",
             ["?"] = "show_help",
+            ["H"] = "toggle_hidden",
             ["y"] = {
               function(state)
                 local node = state.tree:get_node()
@@ -42,20 +44,38 @@ return {
             },
             ["<esc>"] = "cancel",
           },
+        },
+        follow_current_file = { enabled = true },
+        hijack_netrw_behavior = "open_current",
+        filtered_items = {
+         visible = false,
+         show_hidden_count = true,
+         hide_dotfiles = false,
+         hide_gitignored = false,
+         hide_by_name = {
+          '.git',
+          '.next',
+          'node_modules',
+          '__pycache__',
+          '.pytest_cache',
+          '.venv'
+           -- '.DS_Store',
+           -- 'thumbs.db',
+         },
+        never_show = {},
       },
-      follow_current_file = { enabled = true },
-      hijack_netrw_behavior = "open_current",
-     },
+      },
       buffers = {
         window = {
           mappings = {
             ["<cr>"] = "open",
+            ["<2-LeftMouse>"] = "open",
             ["?"] = "show_help",
             ["q"] = {
               function(state)
                 local content = state.tree:get_node()
-                require('bufdelete').bufdelete(content.extra.bufnr)
-                vim.notify('bufnr '..content.extra.bufnr..' deleted')
+                require('bufdelete').bufdelete(cnntent.extra.bufnr)
+                vim.notify('bufnr ' .. content.extra.bufnr .. ' deleted')
               end,
               desc = "buffer_delete"
             },
@@ -96,10 +116,20 @@ return {
             staged    = "A",
             conflict  = "E",
           }
-        }
+        },
+        file_size = {
+          enabled = false,
+          -- required_width = 64, -- min width of window required to show this column
+        },
+        type = {
+          enabled = false,
+          -- required_width = 122, -- min width of window required to show this column
+        },
+        last_modified = {
+          enabled = false,
+          -- required_width = 88, -- min width of window required to show this column
+        },
       }
     }
   end
 }
-
-

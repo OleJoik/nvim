@@ -1,6 +1,3 @@
-
-
-
 M = {
   setup_servers = function()
     local lsp_servers = require("lsp.servers").servers

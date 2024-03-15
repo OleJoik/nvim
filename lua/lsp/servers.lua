@@ -16,18 +16,22 @@ M = {
     -- clangd = {},
     gopls = {},
     pyright = {
-      -- python = {
-      --   analysis = {
-      --     typeCheckingMode = "strict"
-      --   },
-      --   pythonPath = python_path
-      -- }
+      settings = {
+        python = {
+          analysis = {
+            autoSearchPaths = true,
+            diagnosticMode = "openFilesOnly",
+            useLibraryCodeForTypes = true,
+          },
+        },
+      },
     },
     -- mypy = {
     -- },
     -- rust_analyzer = {},
-    -- tsserver = {},
-    -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+    tsserver = {},
+    html = { filetypes = { 'html', 'twig', 'hbs'} },
+    emmet_ls = {},
 
     lua_ls = {
       Lua = {

@@ -1,4 +1,3 @@
-
 M = {
   --  This function gets run when an LSP connects to a particular buffer.
   on_attach = function(_, bufnr)
@@ -35,6 +34,8 @@ M = {
     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
       vim.lsp.buf.format()
     end, { desc = 'Format current buffer with LSP' })
+
+    vim.api.nvim_set_keymap('n', '<leader>form', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
   end
 }
 
