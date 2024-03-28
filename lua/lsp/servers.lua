@@ -39,6 +39,7 @@ M = {
         telemetry = { enable = false },
       },
     },
+    tailwindcss = {}
   }
 }
 return M
