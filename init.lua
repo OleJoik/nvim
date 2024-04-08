@@ -2,6 +2,7 @@
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.o.clipboard = "unnamedplus"
 
 
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'

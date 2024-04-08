@@ -14,7 +14,7 @@
 M = {
   servers = {
     -- clangd = {},
-    gopls = {},
+    -- gopls = {},
     pyright = {
       settings = {
         python = {
@@ -39,7 +39,41 @@ M = {
         telemetry = { enable = false },
       },
     },
-    tailwindcss = {}
+    tailwindcss = {
+      -- Tried to configure for python without success...
+      filetypes = {
+        "css",
+        "scss",
+        "sass",
+        "html",
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "htmldjango",
+        "rust",
+        "svelte",
+        "python"
+      },
+      init_options = {
+        userLanguages = {
+          python = "html",
+        },
+      },
+      settings = {
+        includeLanguages = {
+          typescript = "javascript",
+          typescriptreact = "javascript",
+          htmldjango = "html",
+          python = "html"
+        },
+        tailwindCSS = {
+          classRegex = {
+            [[class="([^"]*)]],
+          },
+        }
+      },
+    }
   }
 }
 return M
