@@ -34,13 +34,14 @@ M = {
     emmet_ls = {},
 
     lua_ls = {
-      Lua = {
-        workspace = { checkThirdParty = false },
-        telemetry = { enable = false },
-      },
+      settings = {
+        Lua = {
+          workspace = { checkThirdParty = false },
+          telemetry = { enable = false },
+        },
+      }
     },
     tailwindcss = {
-      -- Tried to configure for python without success...
       filetypes = {
         "css",
         "scss",
@@ -51,27 +52,21 @@ M = {
         "typescript",
         "typescriptreact",
         "htmldjango",
-        "rust",
-        "svelte",
         "python"
       },
+      settings = {
+        tailwindCSS = {
+          includeLanguages = {
+            htmldjango = "html",
+            python = "html"
+          },
+        },
+      },
+
       init_options = {
         userLanguages = {
           python = "html",
         },
-      },
-      settings = {
-        includeLanguages = {
-          typescript = "javascript",
-          typescriptreact = "javascript",
-          htmldjango = "html",
-          python = "html"
-        },
-        tailwindCSS = {
-          classRegex = {
-            [[class="([^"]*)]],
-          },
-        }
       },
     }
   }

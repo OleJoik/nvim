@@ -19,8 +19,10 @@ M = {
         require('lspconfig')[server_name].setup {
           capabilities = capabilities,
           on_attach = on_attach,
-          settings = lsp_servers[server_name],
+          settings = (lsp_servers[server_name] or {}).settings,
           filetypes = (lsp_servers[server_name] or {}).filetypes,
+          handlers =(lsp_servers[server_name] or {}).handlers,
+          init_options =(lsp_servers[server_name] or {}).init_options,
         }
       end
     }
