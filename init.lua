@@ -5,6 +5,7 @@ vim.g.maplocalleader = ' '
 vim.o.clipboard = "unnamedplus"
 
 
+
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -16,6 +17,7 @@ if not vim.loop.fs_stat(lazypath) then
     lazypath,
   }
 end
+
 
 
 vim.opt.rtp:prepend(lazypath)
@@ -38,9 +40,7 @@ require('lazy').setup({
     },
   },
 
-  {
-    "mg979/vim-visual-multi",
-  },
+  "mg979/vim-visual-multi",
 
   {
     "kylechui/nvim-surround",
@@ -58,12 +58,11 @@ require('lazy').setup({
     end
   },
 
-{
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim" }
-},
-
+  {
+      "ThePrimeagen/harpoon",
+      branch = "harpoon2",
+      dependencies = { "nvim-lua/plenary.nvim" }
+  },
   "nvimtools/none-ls.nvim",
 
   -- deletes buffers without fucking up the window layout
@@ -72,37 +71,16 @@ require('lazy').setup({
   "sindrets/diffview.nvim",
   "petertriho/nvim-scrollbar",
   'theHamsta/nvim-dap-virtual-text',
+  { import = "package" },
 
-  require("package.noice"),
   -- require("package.nvim-tree"),
-
-  require("package.neo-tree"),
-
   -- require("package.barbar"),
-
-
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
-
-  require("package.nvim-lspconfig"),
-  require("package.nvim-cmp"),
-
-  require("package.gitsigns"),
-
   'Mofiqul/vscode.nvim',
-
-  require("package.lualine"),
-  require("package.markdown-preview"),
-
-  require("package.indent-blankline"),
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
-
-  require("package.telescope"),
-  require("package.treesitter"),
-
-  require("package.debug")
 }, {})
 
 

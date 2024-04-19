@@ -1,67 +1,82 @@
-M = {
-  "nvim-tree/nvim-tree.lua",
-  version = "*",
-  lazy = false,
-  dependencies = {
-    "nvim-tree/nvim-web-devicons",
-  },
-  config = function()
-    require("nvim-tree").setup {
-      view = {
-        side = "right",
-        width = 40
-      },
+-- https://github.com/nvim-tree/nvim-tree.lua/wiki/Recipes#workaround-when-using-rmagattiauto-session
+vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+  pattern = 'NvimTree*',
+  callback = function()
+    local api = require('nvim-tree.api')
+    local view = require('nvim-tree.view')
 
+    api.tree.open()
+    if not view.is_visible() then
+      api.tree.open()
+    end
+  end,
+})
+
+
+return {
+  "nvim-tree/nvim-tree.lua",
+  dependencies = "nvim-tree/nvim-web-devicons",
+  config = function()
+    local nvimtree = require("nvim-tree")
+
+    -- recommended settings from nvim-tree documentation
+    vim.g.loaded_netrw = 1
+    vim.g.loaded_netrwPlugin = 1
+
+    nvimtree.setup({
+      view = {
+        side="right",
+        width = 35,
+      },
+      -- change folder arrow icons
       renderer = {
+        indent_markers = {
+          enable = true,
+        },
         icons = {
           git_placement = "after",
           modified_placement = "after",
-          git = {
-            unstaged  = "U",
-            staged    = "A",
-            unmerged  = "M",
-            renamed   = "R",
-            untracked = "?",
-            deleted   = "D",
-            ignored   = "!"
-          }
-        }
+          glyphs = {
+            git = {
+              unstaged  = "U",
+              staged    = "A",
+              unmerged  = "M",
+              renamed   = "R",
+              untracked = "?",
+              deleted   = "D",
+              ignored   = "!"
+            },
+            folder = {
+              arrow_closed = "", -- arrow when folder is closed
+              arrow_open = "", -- arrow when folder is open
+            },
+          },
+        },
       },
-
+      -- disable window_picker for
+      -- explorer to work well with
+      -- window splits
+      actions = {
+        open_file = {
+          window_picker = {
+            enable = false,
+          },
+        },
+      },
       filters = {
-        dotfiles = false
+        custom = { ".DS_Store" },
       },
-
-      live_filter = {
-        prefix = "[FILTER]: ",
-        always_show_folders = false,
+      git = {
+        ignore = false,
       },
+    })
 
-      on_attach = function (bufnr)
-        local api = require "nvim-tree.api"
+    -- set keymaps
+    local keymap = vim.keymap -- for conciseness
 
-        local function opts(desc)
-          return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-        end
-
-        -- api.config.mappings.default_on_attach(bufnr)
-        vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
-        vim.keymap.set('n', 'a', api.fs.create, opts('Create File Or Directory'))
-        vim.keymap.set('n', 'd', api.fs.remove, opts('Delete'))
-        vim.keymap.set('n', 'c', api.fs.copy.node, opts('Copy'))
-        vim.keymap.set('n', 'x', api.fs.cut, opts('Cut'))
-        vim.keymap.set('n', 'p', api.fs.paste, opts('Paste'))
-        vim.keymap.set('n', 'r', api.fs.rename, opts('Rename'))
-        vim.keymap.set('n', 'f', api.live_filter.start, opts('Live Filter: Start'))
-        vim.keymap.set('n', 'F', api.fs.copy.absolute_path, opts('Copy Absolute Path'))
-        vim.keymap.set('n', 'b', api.tree.toggle_no_buffer_filter, opts('Toggle Buffer Filter'))
-
-        vim.keymap.set('n', 'eq', api.tree.close, opts('Close'))
-        vim.keymap.set('n', 'g?', api.tree.toggle_help, opts('Help'))
-      end
-    }
-
-  end,
+    keymap.set("n", "<leader>ee", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" }) -- toggle file explorer
+    keymap.set("n", "<leader>ef", "<cmd>NvimTreeFindFileToggle<CR>", { desc = "Toggle file explorer on current file" }) -- toggle file explorer on current file
+    keymap.set("n", "<leader>ec", "<cmd>NvimTreeCollapse<CR>", { desc = "Collapse file explorer" }) -- collapse file explorer
+    keymap.set("n", "<leader>er", "<cmd>NvimTreeRefresh<CR>", { desc = "Refresh file explorer" }) -- refresh file explorer
+  end
 }
-
-return M

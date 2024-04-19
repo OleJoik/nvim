@@ -1,6 +1,12 @@
 
 require("noice").setup({
   lsp = {
+    progress = {
+      enabled = false
+    },
+    signature = {
+      enabled = false
+    },
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
     override = {
       ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -17,3 +23,12 @@ require("noice").setup({
     lsp_doc_border = false, -- add a border to hover docs and signature help
   },
 })
+
+---@diagnostic disable-next-line: missing-fields
+require("notify").setup({
+  background_colour = "#000000",
+  top_down = false,
+  render="minimal",
+  stages="fade"
+})
+
