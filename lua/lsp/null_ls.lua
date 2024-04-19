@@ -8,7 +8,7 @@ null_ls.setup({
     sources = {
         -- null_ls.builtins.formatting.djhtml,
         null_ls.builtins.formatting.djlint,
-        -- null_ls.builtins.formatting.prettier,
+        null_ls.builtins.formatting.prettier,
         null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.xmlformat,
     },

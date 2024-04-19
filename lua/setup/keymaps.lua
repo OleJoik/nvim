@@ -10,9 +10,6 @@ end, { desc = 'Select [A]ll' })
 vim.keymap.set('n', '<C-BS>', "dvb")
 vim.keymap.set('i', '<C-BS>', "<C-W>")
 
-vim.keymap.set('n', '<leader>t2', ":set tabstop=2", { desc = "Set [T]abs to 2" })
-vim.keymap.set('n', '<leader>t4', ":set tabstop=4", { desc = "Set [T]abs to 4" })
-
 vim.keymap.set('n', '<C-d>', "<C-d>zz")
 vim.keymap.set('n', '<C-u>', "<C-u>zz")
 vim.keymap.set('n', 'J', "5jzz")
@@ -37,11 +34,11 @@ vim.api.nvim_set_keymap('n', '<C-w>j', ':split<CR><C-w>j', { noremap = true, sil
 vim.api.nvim_set_keymap('n', '<C-w>l', ':vsplit<CR><C-w>l', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-q>', ':q<CR>', { noremap = true, silent = true })
 
-vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "[P]aste without overwriting" })
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[Y]ank to clipboard" })
-vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "[Y]ank line to clipboard" })
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "[D]elete into the void" })
-vim.keymap.set({ "n", "v" }, "<leader>v", '"+p', { desc = "[v] Paste from clipboard" })
+-- vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "[P]aste without overwriting" })
+-- vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[Y]ank to clipboard" })
+-- vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "[Y]ank line to clipboard" })
+-- vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "[D]elete into the void" })
+-- vim.keymap.set({ "n", "v" }, "<leader>v", '"+p', { desc = "[v] Paste from clipboard" })
 vim.keymap.set("n", "Q", "<nop>")
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -54,15 +51,15 @@ vim.keymap.set({ "n", "v" }, "<leader>gc", ':DiffviewClose<CR>', { desc = "[G]it
 vim.keymap.set("n", '<leader>gg', ':LazyGit<CR>', { desc = '[G]it [G]it!' })
 vim.keymap.set("n", '<leader>gf', ':LazyGitFilterCurrentFile<CR>', { desc = '[G]it commits in current [F]ile' })
 
-vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>tc", ":tabclose<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>to", ":tabonly<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>tn", ":tabn<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>tp", ":tabp<CR>", { noremap = true })
--- move current tab to previous position
-vim.api.nvim_set_keymap("n", "<leader>tmp", ":-tabmove<CR>", { noremap = true })
--- move current tab to next position
-vim.api.nvim_set_keymap("n", "<leader>tmn", ":+tabmove<CR>", { noremap = true })
+-- vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
+-- vim.api.nvim_set_keymap("n", "<leader>tc", ":tabclose<CR>", { noremap = true })
+-- vim.api.nvim_set_keymap("n", "<leader>to", ":tabonly<CR>", { noremap = true })
+-- vim.api.nvim_set_keymap("n", "<leader>tn", ":tabn<CR>", { noremap = true })
+-- vim.api.nvim_set_keymap("n", "<leader>tp", ":tabp<CR>", { noremap = true })
+-- -- move current tab to previous position
+-- vim.api.nvim_set_keymap("n", "<leader>tmp", ":-tabmove<CR>", { noremap = true })
+-- -- move current tab to next position
+-- vim.api.nvim_set_keymap("n", "<leader>tmn", ":+tabmove<CR>", { noremap = true })
 
 
 -- Removes the search highlight (but keeps the search on)
@@ -91,7 +88,7 @@ vim.api.nvim_set_keymap("n", "<C-b>", ":Neotree action=focus source=buffers posi
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+-- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 vim.keymap.set('n', '<leader>md', ":MarkdownPreviewToggle<CR>", { desc = 'Toggle [M]ark[D]own preview' })
 

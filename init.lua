@@ -35,10 +35,6 @@ require('lazy').setup({
     -- stylua: ignore
     keys = {
       { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-      { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-      { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-      { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-      { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
     },
   },
 
@@ -62,18 +58,22 @@ require('lazy').setup({
     end
   },
 
+{
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" }
+},
+
   "nvimtools/none-ls.nvim",
 
   -- deletes buffers without fucking up the window layout
   'famiu/bufdelete.nvim',
 
-  "yamatsum/nvim-cursorline",
   "sindrets/diffview.nvim",
   "petertriho/nvim-scrollbar",
   'theHamsta/nvim-dap-virtual-text',
 
   require("package.noice"),
-
   -- require("package.nvim-tree"),
 
   require("package.neo-tree"),
@@ -87,11 +87,7 @@ require('lazy').setup({
   require("package.nvim-lspconfig"),
   require("package.nvim-cmp"),
 
-  -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
-
   require("package.gitsigns"),
-
 
   'Mofiqul/vscode.nvim',
 
@@ -120,6 +116,7 @@ require("setup.keymaps")
 require("setup.yank-highlight")
 
 require("setup.telescope")
+require("setup.harpoon")
 
 require("setup.treesitter")
 
@@ -133,11 +130,7 @@ require("lsp.null_ls")
 
 require("setup.markdown-preview")
 
-require("setup.nvim-cursorline")
-
 require("setup.noice")
-require("setup.notify")
-
 require("scrollbar").setup()
 require('gitsigns').setup({})
 
