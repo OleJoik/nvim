@@ -1,3 +1,5 @@
+local actions = require "telescope.actions"
+
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
@@ -8,7 +10,34 @@ require('telescope').setup {
         ['<C-d>'] = false,
       },
     },
+    path_display={"smart"}
   },
+  pickers = {
+    find_files = {
+      theme = "dropdown",
+      previewer = false,
+      layout_config = {
+        prompt_position = "top",
+        anchor = "N"
+      }
+    },
+    buffers = {
+      theme = "dropdown",
+      previewer = false,
+      layout_config = {
+        prompt_position = "top",
+        anchor = "N"
+      },
+      mappings = {
+        i = {
+          ["<c-x>"] = actions.delete_buffer + actions.move_to_top,
+        },
+        n = {
+          ["<c-x>"] = actions.delete_buffer + actions.move_to_top,
+        },
+      },
+    }
+  }
 }
 
 -- Enable telescope fzf native, if installed
@@ -28,32 +57,11 @@ end, { desc = '[/] Fuzzily search in current buffer' })
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').git_files, { desc = '[F]ind [G]it files' })
 vim.keymap.set('n', '<C-p>', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
 vim.keymap.set('n', '<leader>ff', ':lua require"telescope.builtin".find_files({ hidden = true })<CR>', { desc = '[F]ind all [F]iles' })
-vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
 vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
 vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
 
-local function find_directory_and_focus()
-  local actions = require("telescope.actions")
-  local action_state = require("telescope.actions.state")
 
-  local nvim_tree_api = require("nvim-tree")
+vim.keymap.set('n', '<leader>fc', require('telescope.builtin').git_bcommits, { desc = '[F]ind [C]ommit' })
 
-  local function open_nvim_tree(prompt_bufnr, _)
-    actions.select_default:replace(function()
-      actions.close(prompt_bufnr)
-      local selection = action_state.get_selected_entry()
-      nvim_tree_api.tree.open()
-      nvim_tree_api.tree.find_file(selection.cwd .. "/" .. selection.value)
-    end)
-    return true
-  end
-
-  require("telescope.builtin").find_files({
-    find_command = { "fd", "--type", "directory", "--hidden", "--exclude", ".git/*" },
-    attach_mappings = open_nvim_tree,
-  })
-end
-
-vim.keymap.set("n", "<leader>fd", find_directory_and_focus, { desc = '[F]ind [D]irectory' })
-
+-- builtin.git_bcommits
