@@ -107,3 +107,4 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww ~/scripts/tmux-sessionizer<
 vim.keymap.set("n", "<leader>mx", "<cmd>!chmod +x %<CR>", { silent = true, desc = "[M]ake e[X]ecutable" })
 
 vim.keymap.set('n', '<leader>rl', "<cmd>e<CR>", { desc = 'Buffer [R]e[L]oad' })
+vim.keymap.set('n', '<leader>tp', "<cmd>lua require('test_picker').open_picker()<CR>", {noremap = true, silent = true})
