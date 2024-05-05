@@ -1,4 +1,18 @@
 local actions = require "telescope.actions"
+local state = require("telescope.state")
+local action_state = require("telescope.actions.state")
+
+local slow_scroll = function(prompt_bufnr, direction)
+    local previewer = action_state.get_current_picker(prompt_bufnr).previewer
+    local status = state.get_status(prompt_bufnr)
+
+    -- Check if we actually have a previewer and a preview window
+    if type(previewer) ~= "table" or previewer.scroll_fn == nil or status.preview_win == nil then
+      return
+    end
+
+    previewer:scroll_fn(1 * direction)
+  end
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
@@ -6,10 +20,15 @@ require('telescope').setup {
   defaults = {
     mappings = {
       i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
+        ["<C-j>"] = function(bufnr) slow_scroll(bufnr, 1) end,
+        ["<C-k>"] = function(bufnr) slow_scroll(bufnr, -1) end,
+      },
+      n = {
+        ["<C-j>"] = function(bufnr) slow_scroll(bufnr, 1) end,
+        ["<C-k>"] = function(bufnr) slow_scroll(bufnr, -1) end,
       },
     },
+
     path_display={"smart"}
   },
   pickers = {
