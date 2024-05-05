@@ -73,7 +73,6 @@ require('lazy').setup({
   'theHamsta/nvim-dap-virtual-text',
   { import = "package" },
 
-  -- require("package.nvim-tree"),
   -- require("package.barbar"),
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
