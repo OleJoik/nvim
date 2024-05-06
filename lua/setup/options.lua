@@ -11,12 +11,6 @@ vim.o.showtabline = 2  -- Always show tabline
 vim.o.shiftwidth = 4   -- Set the width of an indent to 4 spaces
 vim.o.expandtab = true -- Convert tabs to spaces
 
-vim.opt.relativenumber = true
-DARKGRAY = '#505050'
-vim.api.nvim_set_hl(0, "NonText", {fg = DARKGRAY})
-vim.opt.statuscolumn = '%#NonText#%{&nu&&v:virtnum==0?v:lnum:""}'
-vim.opt.statuscolumn = vim.opt.statuscolumn + ' %=%{&rnu&&(v:relnum%2)&&v:virtnum==0?"\\ ".v:relnum:""}'
-vim.opt.statuscolumn = vim.opt.statuscolumn + '%#LineNr#%{&rnu&&!(v:relnum%2)&&v:virtnum==0?"\\ ".v:relnum:""}  %s'
 
 -- Enable search highlighting
 vim.o.hlsearch = true
@@ -46,8 +40,8 @@ vim.o.smartcase = true
 vim.g.netrw_banner = 0
 -- netrw_menu=0 
 
--- Keep signcolumn on by default
-vim.wo.signcolumn = 'yes'
+-- use number column as signcolumn
+vim.opt.signcolumn = "number"
 
 -- Decrease update time
 vim.o.updatetime = 250
