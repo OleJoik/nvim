@@ -10,20 +10,6 @@ vim.api.nvim_create_user_command(
     {}
 )
 
-local function showCurrentGitInfo()
-    -- Using vim.fn.system to execute shell commands and fetch the current commit hash
-    local commit_hash = vim.fn.system('git rev-parse HEAD')
-
-    -- Trimming any extra whitespace or newline from the output
-    commit_hash = vim.fn.trim(commit_hash)
-
-    -- Getting the current file path in the buffer
-    local current_file = vim.fn.expand('%')
-
-    -- Printing the information
-    print("Current Commit: " .. commit_hash .. ", Active File: " .. current_file)
-end
-
 
 local function openFileAtCommit()
     -- Get the current file's relative path
@@ -58,15 +44,6 @@ return {
   "sindrets/diffview.nvim",
   config = function()
     require("diffview").setup({
-      view = {
-        default = {
-          layout = "diff1_plain"
-        },
-        file_history = {
-          layout = "diff1_plain",
-          winbar_info = false,
-        },
-      },
       file_panel = {
         listing_style = "list",             -- One of 'list' or 'tree'
         -- tree_options = {                    -- Only applies when listing_style is 'tree'
