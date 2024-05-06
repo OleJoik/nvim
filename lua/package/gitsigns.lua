@@ -35,6 +35,10 @@ M = {
     -- See `:help gitsigns.txt`
     numhl = true,
     signcolumn = false,
+    diff_opts = {
+      internal = true
+    },
+    word_diff = false,
     on_attach = function(_)
       vim.keymap.set('n', '<leader>hn', next_hunk, { noremap = true, desc='[N]ext hunk (<C-j>)' })
       vim.keymap.set('n', '<C-j>', next_hunk, { desc = 'Next Hunk' })
