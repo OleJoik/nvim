@@ -70,10 +70,9 @@ require('lazy').setup({
 
   "sindrets/diffview.nvim",
   "petertriho/nvim-scrollbar",
-  'theHamsta/nvim-dap-virtual-text',
+
   { import = "package" },
 
-  -- require("package.barbar"),
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
   'Mofiqul/vscode.nvim',
@@ -81,8 +80,6 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 }, {})
-
-
 
 
 require("setup.colors")
@@ -109,9 +106,4 @@ require("setup.markdown-preview")
 
 require("setup.noice")
 require("scrollbar").setup()
-require('gitsigns').setup({})
 
-require("dap-python").setup('~/.virtualenvs/debugpy/bin/python')
-require('dap-python').test_runner = 'pytest'
-require("setup.dap")
-require("nvim-dap-virtual-text").setup()
