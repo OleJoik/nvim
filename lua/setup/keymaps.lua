@@ -67,7 +67,7 @@ vim.keymap.set("n", '<leader>gf', ':LazyGitFilterCurrentFile<CR>', { desc = '[G]
 -- Search for whatever is selected
 vim.api.nvim_set_keymap('v', '/', 'y/\\V<C-R>"<CR>', { noremap = true })
 -- Clear search completely
-vim.api.nvim_set_keymap('n', '<leader>c/', ':let @/ = ""<CR>:nohlsearch<CR>', { noremap = true, desc = "[C]lear [/]" })
+vim.api.nvim_set_keymap('n', '<leader>/', ':let @/ = ""<CR>:nohlsearch<CR>', { noremap = true, desc = "[C]lear [/]" })
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
