@@ -29,12 +29,6 @@ require('vscode').setup({
 require('vscode').load()
 vim.opt.termguicolors = true
 
--- Change the background color for added lines
-vim.cmd("highlight GitSignsAddLn guibg=#004400")
--- Change the background color for changed lines
-vim.cmd("highlight GitSignsChangeLn guibg=#222200")
--- Change the background color for deleted lines
-vim.cmd("highlight GitSignsDeleteLn guibg=#440000")
 
 vim.cmd("highlight LineNr guifg=#505050")
 
