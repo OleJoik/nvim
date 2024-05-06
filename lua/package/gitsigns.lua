@@ -1,24 +1,51 @@
 
+local display_lines = function ()
+  local gitsigns = require('gitsigns')
+  gitsigns.toggle_linehl()
+  gitsigns.toggle_word_diff()
+  gitsigns.toggle_deleted()
+end
+
+local next_hunk = function ()
+  local gitsigns = require('gitsigns')
+  gitsigns.nav_hunk("next", { preview = false })
+  vim.defer_fn(function ()
+    gitsigns.preview_hunk_inline()
+  end, 50)
+end
+
+local prev_hunk = function ()
+  local gitsigns = require('gitsigns')
+  gitsigns.nav_hunk("prev", { preview = false })
+  vim.defer_fn(function ()
+    gitsigns.preview_hunk_inline()
+  end, 50)
+end
+
+local reset_hunk = function ()
+  local gitsigns = require('gitsigns')
+  gitsigns.reset_hunk()
+end
+
+
 M = {
   -- Adds git related signs to the gutter, as well as utilities for managing changes
   'lewis6991/gitsigns.nvim',
   opts = {
     -- See `:help gitsigns.txt`
-    signs = {
-      add = { text = '+' },
-      change = { text = '~' },
-      delete = { text = '_' },
-      topdelete = { text = '‾' },
-      changedelete = { text = '~' },
-    },
-    on_attach = function(bufnr)
-      vim.keymap.set('n', '<leader>hp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = 'go [H]unk ([P]revious)' })
-      vim.keymap.set('n', '<leader>[h', require('gitsigns').prev_hunk, { buffer = bufnr })
-      vim.keymap.set('n', '<leader>hn', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'go [H]unk ([N]ext)' })
-      vim.keymap.set('n', '<leader>]h', require('gitsigns').next_hunk, { buffer = bufnr })
-      vim.keymap.set('n', '<leader>hd', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[H]unk [D]isplay' })
-      vim.keymap.set('n', '<leader>hr', ':Gitsigns reset_hunk<CR>', { noremap = true, desc='[H]unk [R]evert' })
-      vim.keymap.set('n', '<leader>hl', ":Gitsigns toggle_linehl<CR>:Gitsigns toggle_word_diff<CR>", {desc = 'display [H]unk [L]ines'})
+    numhl = true,
+    signcolumn = false,
+    on_attach = function(_)
+      vim.keymap.set('n', '<leader>hn', next_hunk, { noremap = true, desc='[N]ext hunk (<C-j>)' })
+      vim.keymap.set('n', '<C-j>', next_hunk, { desc = 'Next Hunk' })
+      vim.keymap.set('n', '<leader>hp', next_hunk, { noremap = true, desc='[P]revious hunk (<C-k>)' })
+      vim.keymap.set('n', '<C-k>', prev_hunk, { desc = 'Previous Hunk' })
+      vim.keymap.set('n', '<leader>hr', reset_hunk, { noremap = true, desc='[R]eset hunk' })
+      vim.keymap.set('n', '<leader>hR', require('gitsigns').reset_buffer, { noremap = true, desc='[R]eset to ~HEAD' })
+      vim.keymap.set('n', '<leader>hs', require('gitsigns').stage_hunk, { noremap = true, desc='[S]tage hunk' })
+      vim.keymap.set('n', '<leader>ha', require('gitsigns').stage_buffer, { noremap = true, desc='Stage [A]ll hunks (buffer)' })
+      vim.keymap.set('n', '<leader>hu', require('gitsigns').reset_buffer_index, { noremap = true, desc='[U]nstage all hunks (buffer)' })
+      vim.keymap.set('n', '<leader>l', display_lines, {desc = 'display [H]unk [L]ines'})
     end,
   },
 }
