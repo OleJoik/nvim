@@ -54,6 +54,7 @@ M = {
       vim.keymap.set('n', '<leader>hr', reset_hunk, { noremap = true, desc='[R]eset hunk' })
       vim.keymap.set('n', '<leader>hR', require('gitsigns').reset_buffer, { noremap = true, desc='[R]eset to ~HEAD' })
       vim.keymap.set('n', '<leader>hs', require('gitsigns').stage_hunk, { noremap = true, desc='[S]tage hunk' })
+      vim.keymap.set('n', '<leader>s', require('gitsigns').stage_hunk, { noremap = true, desc='[S]tage hunk' })
       vim.keymap.set('n', '<leader>ha', require('gitsigns').stage_buffer, { noremap = true, desc='Stage [A]ll hunks (buffer)' })
       vim.keymap.set('n', '<leader>hu', require('gitsigns').reset_buffer_index, { noremap = true, desc='[U]nstage all hunks (buffer)' })
       vim.keymap.set('n', '<leader>l', diffthis, {desc = 'display [H]unk [L]ines'})
