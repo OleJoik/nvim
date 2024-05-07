@@ -1,9 +1,16 @@
+-- local is_diffing = false
 
-local display_lines = function ()
+local function diffthis()
   local gitsigns = require('gitsigns')
-  gitsigns.toggle_linehl()
-  gitsigns.toggle_word_diff()
-  gitsigns.toggle_deleted()
+  -- print(vim.bo.filetype)
+  -- print(vim.wo.diff)
+  -- if not is_diffing then
+      gitsigns.diffthis()
+  --     is_diffing = true
+  -- else
+      -- vim.cmd('wincmd p | q')
+      -- is_diffing = false
+  -- end
 end
 
 local next_hunk = function ()
@@ -49,7 +56,7 @@ M = {
       vim.keymap.set('n', '<leader>hs', require('gitsigns').stage_hunk, { noremap = true, desc='[S]tage hunk' })
       vim.keymap.set('n', '<leader>ha', require('gitsigns').stage_buffer, { noremap = true, desc='Stage [A]ll hunks (buffer)' })
       vim.keymap.set('n', '<leader>hu', require('gitsigns').reset_buffer_index, { noremap = true, desc='[U]nstage all hunks (buffer)' })
-      vim.keymap.set('n', '<leader>l', display_lines, {desc = 'display [H]unk [L]ines'})
+      vim.keymap.set('n', '<leader>l', diffthis, {desc = 'display [H]unk [L]ines'})
     end,
   },
 }
