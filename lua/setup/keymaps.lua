@@ -48,7 +48,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- vim.keymap.set('n', '<leader>gr', Git_restore, {desc='Treeview [G]it [R]restore (Revert)'})
 vim.keymap.set({ "n", "v" }, "<leader>go", ':DiffviewOpen<CR>', { desc = "[G]it [O]pen" })
 vim.keymap.set({ "n", "v" }, "<leader>gc", ':DiffviewClose<CR>', { desc = "[G]it [C]lose" })
-vim.keymap.set("n", '<leader>gg', ':LazyGit<CR>', { desc = '[G]it [G]it!' })
+vim.keymap.set("n", '<C-g>', ':LazyGit<CR>', { desc = '[G]it [G]it!' })
 vim.keymap.set("n", '<leader>gf', ':LazyGitFilterCurrentFile<CR>', { desc = '[G]it commits in current [F]ile' })
 
 -- vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
