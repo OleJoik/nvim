@@ -60,6 +60,17 @@ local function open_hover_repl()
   dap.repl.toggle(winopts, '50vsplit new')
 end
 
+local function DebugPythonFile()
+  local dap = require('dap')
+  for _, cfg in ipairs(dap.configurations.python) do
+      if cfg.name == "Launch file" then
+         Selected = cfg
+      end
+  end
+
+  dap.run(Selected)
+end
+
 M = {
   {
     "mfussenegger/nvim-dap",
@@ -72,18 +83,11 @@ M = {
 
       vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
         require('dap.ui.widgets').hover()
-      end)
-      vim.keymap.set({'n', 'v'}, '<Leader>dp', function()
-        require('dap.ui.widgets').preview()
-      end)
-      vim.keymap.set('n', '<Leader>df', function()
-        local widgets = require('dap.ui.widgets')
-        widgets.centered_float(widgets.frames)
-      end)
+      end, { desc = "[H]over selection (DAP)"})
       vim.keymap.set('n', '<Leader>di', function()
         local widgets = require('dap.ui.widgets')
         widgets.centered_float(widgets.scopes)
-      end, { desc = "[I]nspect Scopes"})
+      end, { desc = "[I]nspect scopes (DAP)"})
 
       dap.defaults.fallback.terminal_win_cmd = '15split new'
     end
@@ -97,6 +101,7 @@ M = {
       vim.keymap.set('n', '<leader>tb', PythonDebugBrowser, {noremap = true, silent = true, desc = "Run [T]est in [B]rowser"})
       vim.keymap.set('n', '<leader>ts', PythonTestSlow, {noremap = true, silent = true, desc = "Run [T]est [S]lowly (Browser)"})
       vim.keymap.set('n', '<leader>td', require('dap-python').test_method, {noremap = true, silent = true, desc = "[D]ebug test"})
+      vim.keymap.set('n', '<leader>dpf', DebugPythonFile, {noremap = true, silent = true, desc = "[D]ebug [P]ython [F]ile"})
     end
   },
   {
