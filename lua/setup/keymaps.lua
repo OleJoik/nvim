@@ -30,9 +30,9 @@ vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true, silent = true 
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-w>j', ':split<CR><C-w>j', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-w>l', ':vsplit<CR><C-w>l', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-q>', ':q<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<C-w>j', ':split<CR><C-w>j', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<C-w>l', ':vsplit<CR><C-w>l', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-q>', '<cmd>q<CR>', { noremap = true, silent = true })
 
 -- vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "[P]aste without overwriting" })
 -- vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[Y]ank to clipboard" })
@@ -92,15 +92,11 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open float
 
 vim.keymap.set('n', '<leader>md', ":MarkdownPreviewToggle<CR>", { desc = 'Toggle [M]ark[D]own preview' })
 
-vim.keymap.set('n', '<leader>dt', ":lua require('dap-python').test_method()<CR>", { desc = '[D]ebug [T]est' })
+-- vim.keymap.set('n', '<leader>dt', ":lua require('dap-python').test_method()<CR>", { desc = '[D]ebug [T]est' })
 -- vim.keymap.set('n', '<leader>di', ":lua require('dap').step_into()<CR>", { desc = '[D]ebug step [I]nto' })
 -- vim.keymap.set('n', '<leader>do', ":lua require('dap').step_over()<CR>", { desc = '[D]ebug step [O]ver' })
-vim.keymap.set('n', '<leader>dl', ":lua require('dap.ext.vscode').load_launchjs(nil, {debugpy={'py'}})<CR>",
-  { desc = '[D]ebug [L]load config' })
-vim.keymap.set('n', '<leader>dc', ":lua require('dap').continue()<CR>", { desc = '[D]ebug [C]ontinue' })
-vim.keymap.set('n', '<leader>ds', ":lua require('dap').terminate()<CR>", { desc = '[D]ebug [S]top' })
-vim.keymap.set('n', '<leader>de', ":lua require('dapui').eval(nil, {width=100, enter=true})<CR>",
-  { desc = '[D]ebug [E]valuate' })
+-- vim.keymap.set('n', '<leader>dl', ":lua require('dap.ext.vscode').load_launchjs(nil, {debugpy={'py'}})<CR>",
+--   { desc = '[D]ebug [L]load config' })
 
 
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww ~/scripts/tmux-sessionizer<CR>")
@@ -109,4 +105,4 @@ vim.keymap.set("n", "<leader>mx", "<cmd>!chmod +x %<CR>", { silent = true, desc 
 vim.keymap.set('n', '<leader>rl', "<cmd>e<CR>", { desc = 'Buffer [R]e[L]oad' })
 vim.keymap.set('n', '<leader>tp', "<cmd>lua require('test_picker').open_picker()<CR>", {noremap = true, silent = true})
 
-vim.keymap.set('n', '<leader>di', "<cmd>DiffviewFile<CR>", {noremap = true, silent = true})
+

@@ -48,9 +48,9 @@ M = {
     word_diff = false,
     on_attach = function(_)
       vim.keymap.set('n', '<leader>hn', next_hunk, { noremap = true, desc='[N]ext hunk (<C-j>)' })
-      vim.keymap.set('n', '<C-j>', next_hunk, { desc = 'Next Hunk' })
+      vim.keymap.set('n', '<A-j>', next_hunk, { desc = 'Next Hunk' })
       vim.keymap.set('n', '<leader>hp', next_hunk, { noremap = true, desc='[P]revious hunk (<C-k>)' })
-      vim.keymap.set('n', '<C-k>', prev_hunk, { desc = 'Previous Hunk' })
+      vim.keymap.set('n', '<A-k>', prev_hunk, { desc = 'Previous Hunk' })
       vim.keymap.set('n', '<leader>hr', reset_hunk, { noremap = true, desc='[R]eset hunk' })
       vim.keymap.set('n', '<leader>hR', require('gitsigns').reset_buffer, { noremap = true, desc='[R]eset to ~HEAD' })
       vim.keymap.set('n', '<leader>hs', require('gitsigns').stage_hunk, { noremap = true, desc='[S]tage hunk' })
