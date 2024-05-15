@@ -54,19 +54,25 @@ M = {
         "htmldjango",
         "python"
       },
-      settings = {
-        tailwindCSS = {
-          includeLanguages = {
-            htmldjango = "html",
-            python = "html"
-          },
-        },
-      },
-
       init_options = {
         userLanguages = {
           python = "html",
         },
+      },
+      settings = {
+        includeLanguages = {
+          typescript = "javascript",
+          typescriptreact = "javascript",
+          htmldjango = "html",
+          python = "html"
+        },
+        tailwindCSS = {
+          experimental = {
+            classRegex = {
+              [[class_="([^"]*)]],
+            },
+          }
+        }
       },
     }
   }
