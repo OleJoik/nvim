@@ -45,7 +45,7 @@ function PythonTestSlow()
   end
 
   print("Running ".. func_name .. " in pytest (playwright slow motion)")
-  local command = "term pytest --slowmo 2000 --headed -s -k " .. func_name
+  local command = "term pytest --slowmo 500 --headed -s -k " .. func_name
   vim.cmd(command)
 end
 
