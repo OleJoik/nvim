@@ -69,7 +69,13 @@ M = {
         tailwindCSS = {
           experimental = {
             classRegex = {
-              [[class_="([^"]*)]],
+              -- Single line strings:
+              [[class_="([^"]*)]],    -- for double quoted strings
+              [[class_='([^']*)]],    -- for single quoted strings
+
+              -- Multi-line strings:
+              [[class_="""([^"]*)"""]],  -- for multi-line double quoted strings
+              [[class_='''([^']*)''']]  -- for multi-line single quoted strings
             },
           }
         }
