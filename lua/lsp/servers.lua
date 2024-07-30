@@ -14,7 +14,8 @@
 M = {
   servers = {
     -- clangd = {},
-    -- gopls = {},
+    gopls = {},
+    templ = {},
     pyright = {
       settings = {
         python = {
@@ -30,7 +31,7 @@ M = {
     -- },
     -- rust_analyzer = {},
     tsserver = {},
-    html = { filetypes = { 'html', 'twig', 'hbs'} },
+    html = { filetypes = { 'html', 'twig', 'hbs', 'templ'} },
     emmet_ls = {},
 
     lua_ls = {
@@ -52,7 +53,8 @@ M = {
         "typescript",
         "typescriptreact",
         "htmldjango",
-        "python"
+        "python",
+        "templ"
       },
       init_options = {
         userLanguages = {
@@ -66,19 +68,19 @@ M = {
           htmldjango = "html",
           python = "html"
         },
-        tailwindCSS = {
-          experimental = {
-            classRegex = {
-              -- Single line strings:
-              [[class_="([^"]*)]],    -- for double quoted strings
-              [[class_='([^']*)]],    -- for single quoted strings
-
-              -- Multi-line strings:
-              [[class_="""([^"]*)"""]],  -- for multi-line double quoted strings
-              [[class_='''([^']*)''']]  -- for multi-line single quoted strings
-            },
-          }
-        }
+        -- tailwindCSS = {
+        --   experimental = {
+        --     classRegex = {
+        --       -- Single line strings:
+        --       [[class_="([^"]*)]],    -- for double quoted strings
+        --       [[class_='([^']*)]],    -- for single quoted strings
+        --
+        --       -- Multi-line strings:
+        --       [[class_="""([^"]*)"""]],  -- for multi-line double quoted strings
+        --       [[class_='''([^']*)''']],  -- for multi-line single quoted strings
+        --     },
+        --   }
+        -- }
       },
     }
   }

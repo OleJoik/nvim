@@ -82,6 +82,8 @@ require('lazy').setup({
 }, {})
 
 
+require("setup.templ")
+
 require("setup.colors")
 require("setup.options")
 require("setup.keymaps")
