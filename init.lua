@@ -1,4 +1,3 @@
--- for linux, do: xset r rate 200 30
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -41,6 +40,8 @@ require('lazy').setup({
   },
 
   "mg979/vim-visual-multi",
+
+  "nvim-pack/nvim-spectre",
 
   {
     "kylechui/nvim-surround",
