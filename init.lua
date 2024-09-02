@@ -17,6 +17,8 @@ if not vim.loop.fs_stat(lazypath) then
   }
 end
 
+print("hello")
+
 
 
 vim.opt.rtp:prepend(lazypath)
