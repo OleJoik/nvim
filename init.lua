@@ -17,9 +17,6 @@ if not vim.loop.fs_stat(lazypath) then
   }
 end
 
-print("hello")
-
-
 
 vim.opt.rtp:prepend(lazypath)
 
@@ -78,12 +75,6 @@ require('lazy').setup({
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = {},
-  },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
