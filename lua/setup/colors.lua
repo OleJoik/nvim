@@ -1,32 +1,16 @@
 
--- COLORS
-local c = require('vscode.colors').get_colors()
-require('vscode').setup({
-    -- Alternatively set style in setup
-    style = 'dark',
+vim.cmd[[colorscheme nord]]
+-- Example config in lua
+vim.g.nord_contrast = false
+vim.g.nord_borders = true
+vim.g.nord_disable_background = true
+vim.g.nord_italic = true
+vim.g.nord_uniform_diff_background = false
+vim.g.nord_bold = false
 
-    -- Enable transparent background
-    transparent = true,
+-- Load the colorscheme
+require('nord').set()
 
-    -- Enable italic comment
-    italic_comments = true,
-
-    -- Disable nvim-tree background color
-    disable_nvimtree_bg = true,
-
-    -- Override colors (see ./lua/vscode/colors.lua)
-    color_overrides = {
-        vscLineNumber = '#FFFFFF',
-    },
-
-    -- Override highlight groups (see ./lua/vscode/theme.lua)
-    group_overrides = {
-        -- this supports the same val table as vim.api.nvim_set_hl
-        -- use colors from this colorscheme by requiring vscode.colors!
-        Cursor = { fg=c.vscDarkBlue, bg=c.vscLightGreen, bold=true },
-    }
-})
-require('vscode').load()
 vim.opt.termguicolors = true
 
 
