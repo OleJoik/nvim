@@ -35,7 +35,7 @@ M = {
           left = "",
           right = ""
         },
-        theme = "nord"
+        theme = "tokyonight"
       },
       sections = {
         lualine_a = { "mode" },
