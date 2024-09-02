@@ -22,6 +22,7 @@ M = {
 
     -- Lesser used LSP functionality
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+    nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
     nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
     nmap('<leader>wl', function()

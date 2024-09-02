@@ -27,6 +27,7 @@ M = {
         },
       },
     },
+    nixd = {},
     -- mypy = {
     -- },
     -- rust_analyzer = {},

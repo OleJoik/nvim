@@ -77,6 +77,7 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
   'Mofiqul/vscode.nvim',
+  'shaunsingh/nord.nvim',
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },

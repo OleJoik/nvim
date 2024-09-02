@@ -10,7 +10,10 @@ null_ls.setup({
         null_ls.builtins.formatting.djlint,
         null_ls.builtins.formatting.prettier,
         null_ls.builtins.formatting.black,
-        null_ls.builtins.formatting.golines
+        null_ls.builtins.formatting.golines,
+        null_ls.builtins.formatting.alejandra,
+        null_ls.builtins.code_actions.statix,
+        null_ls.builtins.diagnostics.statix
     },
     on_attach = function(client, bufnr)
         if client.supports_method("textDocument/formatting") then
