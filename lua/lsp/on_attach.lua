@@ -37,6 +37,11 @@ M = {
     end, { desc = 'Format current buffer with LSP' })
 
     vim.api.nvim_set_keymap('n', '<leader>form', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
+
+    if client.name == 'ruff_lsp' then
+      -- Disable hover in favor of Pyright
+      client.server_capabilities.hoverProvider = false
+    end
   end
 }
 
