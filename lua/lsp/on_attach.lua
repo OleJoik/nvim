@@ -1,3 +1,16 @@
+
+_G.skip_formatting_buffers = {}
+
+vim.api.nvim_set_keymap('n', '<leader>S', ':lua SaveWithoutFormatting()<CR>', { noremap = true, silent = true, desc="[S]ave without formatting" })
+
+function SaveWithoutFormatting()
+    local bufnr = vim.api.nvim_get_current_buf()
+    _G.skip_formatting_buffers[bufnr] = true
+    vim.cmd('write')
+    _G.skip_formatting_buffers[bufnr] = false
+end
+
+
 M = {
   --  This function gets run when an LSP connects to a particular buffer.
   on_attach = function(client, bufnr)
@@ -49,12 +62,16 @@ M = {
             group = augroup,
             buffer = bufnr,
             callback = function()
-              vim.lsp.buf.format({async = false})
-              vim.lsp.buf.code_action({
-               context = { only = { "source.organizeImports" } },
-               apply = true,
-             })
-             vim.wait(100)
+              if not _G.skip_formatting_buffers[bufnr] then
+                vim.lsp.buf.format({async = false})
+                if vim.bo[bufnr].filetype == "python" then
+                  vim.lsp.buf.code_action({
+                      context = { only = { "source.organizeImports" } },
+                      apply = true,
+                  })
+                  vim.wait(100)
+                end
+              end
             end,
         })
     end
