@@ -23,7 +23,8 @@ null_ls.setup({
                 buffer = bufnr,
                 callback = function()
                     if not _G.skip_formatting_buffers[bufnr] then
-                        vim.lsp.buf.format({ async = false })
+                        -- vim.lsp.buf.format({ async = false })
+                        vim.lsp.buf.format()
                     end
                 end,
             })
