@@ -1,6 +1,6 @@
 M = {
   --  This function gets run when an LSP connects to a particular buffer.
-  on_attach = function(_, bufnr)
+  on_attach = function(client, bufnr)
     local nmap = function(keys, func, desc)
       if desc then
         desc = 'LSP: ' .. desc
@@ -41,6 +41,22 @@ M = {
     if client.name == 'ruff_lsp' then
       -- Disable hover in favor of Pyright
       client.server_capabilities.hoverProvider = false
+    end
+
+    if client.supports_method("textDocument/formatting") then
+        vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = augroup,
+            buffer = bufnr,
+            callback = function()
+              vim.lsp.buf.format({async = false})
+              vim.lsp.buf.code_action({
+               context = { only = { "source.organizeImports" } },
+               apply = true,
+             })
+             vim.wait(100)
+            end,
+        })
     end
   end
 }
