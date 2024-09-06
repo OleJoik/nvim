@@ -9,7 +9,7 @@ null_ls.setup({
         -- null_ls.builtins.formatting.djhtml,
         null_ls.builtins.formatting.djlint,
         null_ls.builtins.formatting.prettier,
-        null_ls.builtins.formatting.black,
+        null_ls.builtins.formatting.ruff,
         null_ls.builtins.formatting.golines,
         null_ls.builtins.formatting.alejandra,
         null_ls.builtins.code_actions.statix,
