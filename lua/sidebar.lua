@@ -276,7 +276,7 @@ M.spectre_next = function()
     if row.filename then
       vim.api.nvim_win_set_cursor(0, {row.line, 5})
       vim.cmd("wincmd p")
-      preview_search_replace_buffer(row.filename, row.cursor.lnum - 1, row.cursor.col - 1 )
+      preview_search_replace_buffer(row.filename, row.cursor.lnum - 1, row.cursor.col )
       vim.cmd("wincmd p")
     end
     return 
@@ -289,7 +289,7 @@ M.spectre_previous = function()
     if row.filename then
       vim.api.nvim_win_set_cursor(0, {row.line, 5})
       vim.cmd("wincmd p")
-      preview_search_replace_buffer(row.filename, row.cursor.lnum - 1, row.cursor.col - 1 )
+      preview_search_replace_buffer(row.filename, row.cursor.lnum - 1, row.cursor.col )
       vim.cmd("wincmd p")
     end
 

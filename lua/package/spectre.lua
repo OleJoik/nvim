@@ -5,13 +5,13 @@ M = {
     },
     config = function()
       require('spectre').setup{
-        -- mapping={
-        --   ['hello'] = {
-        --     map = "<C-j>",
-        --     cmd = "<cmd>lua require('spectre').resume_last_search()<CR>",
-        --     desc = "repeat last search"
-        --   }
-        -- }
+        mapping = {
+          ['run_replace'] = {
+              map = "<C-r>",
+              cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
+              desc = "replace all"
+          },
+        },
         highlight = {
             search = "DiffChange",
             replace = "DiffAdd"
