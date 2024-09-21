@@ -1,5 +1,6 @@
 require("git_functions")
 
+
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 
@@ -50,7 +51,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- vim.keymap.set('n', '<leader>gr', Git_restore, {desc='Treeview [G]it [R]restore (Revert)'})
 vim.keymap.set({ "n", "v" }, "<leader>go", ':DiffviewOpen<CR>', { desc = "[G]it [O]pen" })
 vim.keymap.set({ "n", "v" }, "<leader>gc", ':DiffviewClose<CR>', { desc = "[G]it [C]lose" })
-vim.keymap.set("n", '<C-g>', ':LazyGit<CR>', { desc = '[G]it [G]it!' })
+-- vim.keymap.set("n", '<C-g>', ':LazyGit<CR>', { desc = '[G]it [G]it!' })
 vim.keymap.set("n", '<leader>gf', ':LazyGitFilterCurrentFile<CR>', { desc = '[G]it commits in current [F]ile' })
 
 -- vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
@@ -81,7 +82,7 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- vim.api.nvim_set_keymap("n", "<leader>ef", ":NvimTreeFindFile<CR>", {silent = true, noremap = true, desc="Find file in filetree"})
 
 
-vim.api.nvim_set_keymap("n", "<C-e>", ":Neotree action=focus position=right<CR>", { silent = true, noremap = true })
+-- vim.api.nvim_set_keymap("n", "<C-e>", function() require("sidebar").open_explorer() end, { silent = true, noremap = true })
 
 vim.api.nvim_set_keymap("n", "<C-b>", ":Neotree action=focus source=buffers position=right<CR>",
   { silent = true, noremap = true })
@@ -107,14 +108,14 @@ vim.keymap.set("n", "<leader>mx", "<cmd>!chmod +x %<CR>", { silent = true, desc 
 vim.keymap.set('n', '<leader>rl', "<cmd>e<CR>", { desc = 'Buffer [R]e[L]oad' })
 vim.keymap.set('n', '<leader>tp', "<cmd>lua require('test_picker').open_picker()<CR>", {noremap = true, silent = true})
 
--- Vertical help 
--- vim.api.nvim_set_keymap('c', 'help', 'vert help', { noremap = true, silent = false })
--- vim.api.nvim_set_keymap('c', 'h', 'vert help', { noremap = true, silent = false })
 
-vim.api.nvim_create_user_command('Help', function(opts)
-  vim.cmd('vert help ' .. opts.args)
-end, { nargs = '*', complete = 'help' })
+vim.keymap.set("n", "<C-e>", require("sidebar").open_explorer, { silent = true, noremap = true })
+vim.keymap.set("n", "<C-g>", require("sidebar").open_git, { silent = true, noremap = true })
+local search_replace = function()
+  require("sidebar").open_spectre("")
+end
+vim.keymap.set("n", "<C-f>", search_replace, { silent = true, noremap = true })
+vim.keymap.set("n", "<C-m>", require("sidebar").spectre_next, { silent = true, noremap = true })
+vim.keymap.set("n", "<C-,>", require("sidebar").spectre_previous, { silent = true, noremap = true })
 
-vim.api.nvim_create_user_command('H', function(opts)
-  vim.cmd('vert help ' .. opts.args)
-end, { nargs = '*', complete = 'help' })
+vim.keymap.set("n", "<leader><leader>x", "<cmd>source %<CR>", { desc = "Execute the current file" })

@@ -35,7 +35,7 @@ M = {
           left = "",
           right = ""
         },
-        theme = "tokyonight"
+        -- theme = "vscode"
       },
       sections = {
         lualine_a = { "mode" },

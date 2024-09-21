@@ -3,6 +3,8 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.o.clipboard = "unnamedplus"
 
+require("globals")
+
 
 
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -21,6 +23,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
+
+  "tpope/vim-fugitive",
+  'Mofiqul/vscode.nvim',
   {
     "kdheepak/lazygit.nvim",
     dependencies = {
@@ -37,6 +42,7 @@ require('lazy').setup({
       { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
     },
   },
+
 
   "mg979/vim-visual-multi",
 
@@ -58,11 +64,6 @@ require('lazy').setup({
     end
   },
 
-  {
-      "ThePrimeagen/harpoon",
-      branch = "harpoon2",
-      dependencies = { "nvim-lua/plenary.nvim" }
-  },
   "nvimtools/none-ls.nvim",
 
   -- deletes buffers without fucking up the window layout
@@ -78,35 +79,42 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
+
+  "yamatsum/nvim-cursorline",
 }, {})
 
 
-require("setup.templ")
-
-require("setup.colors")
-require("setup.options")
-require("setup.keymaps")
-
-
-require("setup.yank-highlight")
-
-require("setup.telescope")
-require("setup.harpoon")
-
-require("setup.treesitter")
 
 -- Setup neovim lua configuration
+--
+
 require('neodev').setup()
 
-require("lsp.setup_servers").setup_servers()
 
-require("lsp.nvim-cmp")
-require("lsp.null_ls")
-
-require("setup.markdown-preview")
+require("lsp")
 
 require("scrollbar").setup()
 
 
 require("play")
 require("floating")
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "help",
+    callback = function()
+        vim.cmd("wincmd H")
+        vim.cmd("vert resize 90")
+    end,
+})
+require('nvim-cursorline').setup {
+  cursorline = {
+    enable = true,
+    timeout = 300,
+    number = false,
+  },
+  cursorword = {
+    enable = true,
+    min_length = 3,
+    hl = { underline = true },
+  }
+}
