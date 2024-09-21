@@ -105,6 +105,8 @@ require("lsp.null_ls")
 
 require("setup.markdown-preview")
 
-require("setup.noice")
 require("scrollbar").setup()
 
+
+require("play")
+require("floating")

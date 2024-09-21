@@ -24,7 +24,9 @@ vim.keymap.set("x", "<", "<gv")
 -- map('n', '<C-h>', '<Cmd>BufferPrevious<CR>', opts)
 -- map('n', '<C-<>', '<Cmd>BufferMovePrevious<CR>', opts)
 -- map('n', '<C->>', '<Cmd>BufferMoveNext<CR>', opts)
-map('n', '<C-x>', "<Cmd>Bdelete<CR>", opts)
+-- map('n', '<C-x>', "<Cmd>Bdelete<CR>", opts)
+
+
 
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })
@@ -105,4 +107,14 @@ vim.keymap.set("n", "<leader>mx", "<cmd>!chmod +x %<CR>", { silent = true, desc 
 vim.keymap.set('n', '<leader>rl', "<cmd>e<CR>", { desc = 'Buffer [R]e[L]oad' })
 vim.keymap.set('n', '<leader>tp', "<cmd>lua require('test_picker').open_picker()<CR>", {noremap = true, silent = true})
 
+-- Vertical help 
+-- vim.api.nvim_set_keymap('c', 'help', 'vert help', { noremap = true, silent = false })
+-- vim.api.nvim_set_keymap('c', 'h', 'vert help', { noremap = true, silent = false })
 
+vim.api.nvim_create_user_command('Help', function(opts)
+  vim.cmd('vert help ' .. opts.args)
+end, { nargs = '*', complete = 'help' })
+
+vim.api.nvim_create_user_command('H', function(opts)
+  vim.cmd('vert help ' .. opts.args)
+end, { nargs = '*', complete = 'help' })

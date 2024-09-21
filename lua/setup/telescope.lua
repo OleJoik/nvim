@@ -62,12 +62,28 @@ require('telescope').setup {
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
+local open_file = function()
+  -- win_id = vim.api.nvim_get_current_win()
+  --
+  -- vim.notify("win_id" .. vim.inspect(win_id), vim.log.levels.INFO)
+
+  require('telescope.builtin').find_files()
+
+  -- -- Get the current buffer ID
+  -- local buf_id = vim.api.nvim_get_current_buf()
+  --
+  -- -- Get the current buffer name
+  -- local buf_name = vim.api.nvim_buf_get_name(buf_id)
+  -- vim.notify("buf" .. vim.inspect(buf_id) .. " " .. vim.inspect(buf_name), vim.log.levels.INFO)
+  -- vim.api.nvim_win_set_var(win_id, "winbarbar", true)
+end
+
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').git_files, { desc = '[F]ind [G]it files' })
-vim.keymap.set('n', '<C-p>', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
+vim.keymap.set('n', '<C-p>', open_file, { desc = '[F]ind [F]iles' })
 vim.keymap.set('n', '<leader>ff', ':lua require"telescope.builtin".find_files({ hidden = true })<CR>', { desc = '[F]ind all [F]iles' })
 vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
