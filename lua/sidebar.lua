@@ -118,6 +118,7 @@ M.open_git = function()
     local width = other_width or default_width
     vim.cmd('vert Git | wincmd L | vert resize ' .. width)
     -- vim.api.nvim_set_keymap('n', '<leader>o', ':Gedit <cfile> | wincmd h<CR>', { noremap = true, silent = true })
+    vim.bo.buflisted = false
     return 5
 end
 
@@ -207,11 +208,17 @@ local preview_search_replace_buffer = function(fname, row, col)
   vim.api.nvim_buf_set_option(buf, 'filetype', filetype)
 
   search_len = string.len(search)
+  replace_len = string.len(replace)
+
   vim.api.nvim_buf_set_text(0, row, col + search_len - 1, row, col + search_len -1, {replace})
 
   local ns_id = vim.api.nvim_create_namespace("SearchReplace")
-  vim.api.nvim_buf_add_highlight(0, ns_id, "DiffDelete", row, col - 1, col + search_len - 1)
-  vim.api.nvim_buf_add_highlight(0, ns_id, "DiffAdd", row, col + search_len - 1, col + search_len + string.len(replace) - 1)
+  local search_hl = "DiffDelete"
+  if replace_len == 0 then
+    search_hl = "DiffChanged"
+  end
+  vim.api.nvim_buf_add_highlight(0, ns_id, search_hl, row, col - 1, col + search_len - 1)
+  vim.api.nvim_buf_add_highlight(0, ns_id, "DiffAdd", row, col + search_len - 1, col + search_len + replace_len - 1)
   vim.api.nvim_win_set_cursor(0, {row, col - 1})
   vim.cmd("normal! zz")
 
