@@ -25,7 +25,7 @@ vim.keymap.set("x", "<", "<gv")
 -- map('n', '<C-h>', '<Cmd>BufferPrevious<CR>', opts)
 -- map('n', '<C-<>', '<Cmd>BufferMovePrevious<CR>', opts)
 -- map('n', '<C->>', '<Cmd>BufferMoveNext<CR>', opts)
--- map('n', '<C-x>', "<Cmd>Bdelete<CR>", opts)
+map('n', '<C-x>', "<Cmd>Bdelete<CR>", opts)
 
 
 

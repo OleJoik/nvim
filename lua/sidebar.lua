@@ -121,10 +121,20 @@ M.open_git = function()
     return 5
 end
 
+local function clear_namespace_across_all_buffers(ns_id)
+  local buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(buffers) do
+    if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
+      vim.api.nvim_buf_clear_namespace(buf, ns_id, 0, -1)
+    end
+  end
+end
 
 local open_spectre_file = function(file_path, cursor, search, replace)
   vim.cmd("e " .. vim.fn.fnameescape(file_path))
   local ns_id = vim.api.nvim_create_namespace("SearchReplace")
+  clear_namespace_across_all_buffers(ns_id)
   vim.api.nvim_buf_add_highlight(0, ns_id, "@diff.delta", cursor.lnum - 1, cursor.col - 1, cursor.col + string.len(search) - 1)
   vim.api.nvim_win_set_cursor(0, {cursor.lnum, cursor.col - 1})
   vim.cmd("normal! zz")
@@ -161,6 +171,7 @@ local previous_spectre_line = function()
 end
 
 local next_spectre_line = function()
+    local cursor_line_n = vim.api.nvim_win_get_cursor(0)[1]
     local next = cursor_line_n
     local filename = nil
     local cursor = nil
@@ -225,6 +236,8 @@ M.open_spectre = function(search_text)
 end
 
 
+local buf = vim.api.nvim_create_buf(true, true)
+vim.api.nvim_set_current_buf(buf)
 
 return M
 

@@ -296,4 +296,4 @@ vim.keymap.set('n', 'mw', winfo, { noremap = true, silent = true })
 
 
 
-vim.keymap.set('n', '<C-x>', remove_buffer, { noremap = true, silent = true  })
+-- vim.keymap.set('n', '<C-x>', remove_buffer, { noremap = true, silent = true  })
