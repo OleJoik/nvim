@@ -131,25 +131,92 @@ local function clear_namespace_across_all_buffers(ns_id)
   end
 end
 
-local open_spectre_file = function(file_path, cursor, search, replace)
-  vim.cmd("e " .. vim.fn.fnameescape(file_path))
-  local ns_id = vim.api.nvim_create_namespace("SearchReplace")
-  clear_namespace_across_all_buffers(ns_id)
-  vim.api.nvim_buf_add_highlight(0, ns_id, "@diff.delta", cursor.lnum - 1, cursor.col - 1, cursor.col + string.len(search) - 1)
-  vim.api.nvim_win_set_cursor(0, {cursor.lnum, cursor.col - 1})
-  vim.cmd("normal! zz")
+M.open_spectre = function(search_text)
+  if focus_spectre() then
+      return
+  end
+
+  local width = close_git()
+  if not width then
+    width = close_explorer()
+  end
+
+  if not width or width < spectre_width then
+    width = spectre_width
+  end
+
+  local is_insert_mode = true
+  if string.len(search_text) > 0 then
+    is_insert_mode = false
+  end
+
+  require('spectre').open({
+    is_insert_mode = is_insert_mode,
+    search_text=search_text,
+  })
+
+  local loc = find_spectre()
+  local sidebar = require("sidebar")
+
+  vim.keymap.set("n", "<C-j>", sidebar.spectre_next, { silent = true, noremap = true, buffer = loc.buf })
+  vim.keymap.set("n", "<C-k>", sidebar.spectre_previous, { silent = true, noremap = true, buffer = loc.buf })
+  vim.api.nvim_win_set_width(loc.win, width)
 end
 
+local function get_basename(path)
+    return path:match("^.+/(.+)$")
+end
 
-local preview_search_replace_buf = function(row)
-    if row.filename then
-      vim.api.nvim_win_set_cursor(0, {row.line, 5})
-      vim.cmd("wincmd p")
+local function find_buffer_by_name(name)
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        local buf_name = vim.api.nvim_buf_get_name(buf)
+        local bn = get_basename(buf_name)
 
-      local query = require("spectre.actions").get_state().query
-      open_spectre_file(row.filename, row.cursor, query.search_query, query.replace_query)
-      vim.cmd("wincmd p")
+        if bn == name then
+            return buf
+        end
     end
+    return nil
+end
+
+local preview_search_replace_buffer = function(fname, row, col)
+  local query = require("spectre.actions").get_state().query
+  local search = query.search_query
+  local replace = query.replace_query
+  local buf_name = "[SR Preview]"
+  local buf = find_buffer_by_name(buf_name)
+  P(buf)
+  if not buf then
+    buf = vim.api.nvim_create_buf(true, true)
+    vim.api.nvim_buf_set_name(buf, buf_name)
+  end
+  vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+  vim.api.nvim_buf_set_option(buf, 'readonly', false)
+  vim.api.nvim_set_current_buf(buf)
+  local file = io.open(fname, "r")
+  if file then
+      local content = file:read("*a") -- Read the entire file
+      file:close()
+      local lines = vim.split(content, "\n", true)
+      vim.api.nvim_buf_set_lines(buf, 0, -1, true, lines)
+    else
+      print("Error: Cannot open file " .. fname)
+    end
+
+  local filetype = vim.filetype.match { filename = fname }
+  vim.api.nvim_buf_set_option(buf, 'filetype', filetype)
+
+  search_len = string.len(search)
+  vim.api.nvim_buf_set_text(0, row, col + search_len - 1, row, col + search_len -1, {replace})
+
+  local ns_id = vim.api.nvim_create_namespace("SearchReplace")
+  vim.api.nvim_buf_add_highlight(0, ns_id, "DiffDelete", row, col - 1, col + search_len - 1)
+  vim.api.nvim_buf_add_highlight(0, ns_id, "DiffAdd", row, col + search_len - 1, col + search_len + string.len(replace) - 1)
+  vim.api.nvim_win_set_cursor(0, {row, col - 1})
+  vim.cmd("normal! zz")
+
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(buf, 'readonly', true)
 end
 
 local previous_spectre_line = function()
@@ -192,52 +259,29 @@ end
 M.spectre_next = function()
     focus_spectre()
     local row = next_spectre_line()
-    preview_search_replace_buf(row)
+
+    if row.filename then
+      vim.api.nvim_win_set_cursor(0, {row.line, 5})
+      vim.cmd("wincmd p")
+      preview_search_replace_buffer(row.filename, row.cursor.lnum - 1, row.cursor.col - 1 )
+      vim.cmd("wincmd p")
+    end
     return 
 end
 
 M.spectre_previous = function()
     focus_spectre()
     local row = previous_spectre_line()
-    preview_search_replace_buf(row)
+
+    if row.filename then
+      vim.api.nvim_win_set_cursor(0, {row.line, 5})
+      vim.cmd("wincmd p")
+      preview_search_replace_buffer(row.filename, row.cursor.lnum - 1, row.cursor.col - 1 )
+      vim.cmd("wincmd p")
+    end
+
     return 
 end
-
-M.open_spectre = function(search_text)
-  if focus_spectre() then
-      return
-  end
-
-  local width = close_git()
-  if not width then
-    width = close_explorer()
-  end
-
-  if not width or width < spectre_width then
-    width = spectre_width
-  end
-
-  local is_insert_mode = true
-  if string.len(search_text) > 0 then
-    is_insert_mode = false
-  end
-
-  require('spectre').open({
-    is_insert_mode = is_insert_mode,
-    search_text=search_text,
-  })
-
-  local loc = find_spectre()
-  local sidebar = require("sidebar")
-
-  vim.keymap.set("n", "<C-j>", sidebar.spectre_next, { silent = true, noremap = true, buffer = loc.buf })
-  vim.keymap.set("n", "<C-k>", sidebar.spectre_previous, { silent = true, noremap = true, buffer = loc.buf })
-  vim.api.nvim_win_set_width(loc.win, width)
-end
-
-
-local buf = vim.api.nvim_create_buf(true, true)
-vim.api.nvim_set_current_buf(buf)
 
 return M
 
