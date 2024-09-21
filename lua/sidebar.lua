@@ -132,6 +132,20 @@ local function clear_namespace_across_all_buffers(ns_id)
   end
 end
 
+M.spectre_replace_single = function()
+  local query = require("spectre.actions").get_state().query
+  local replace = query.replace_query
+
+  if string.len(replace) ~= 0 then
+    require('spectre.actions').run_current_replace()
+    require('spectre').toggle_line()
+  end
+end
+
+M.spectre_delete_single = function()
+  require('spectre').toggle_line()
+end
+
 M.open_spectre = function(search_text)
   if focus_spectre() then
       return
@@ -161,6 +175,9 @@ M.open_spectre = function(search_text)
 
   vim.keymap.set("n", "<C-j>", sidebar.spectre_next, { silent = true, noremap = true, buffer = loc.buf })
   vim.keymap.set("n", "<C-k>", sidebar.spectre_previous, { silent = true, noremap = true, buffer = loc.buf })
+
+  vim.keymap.set("n", "r", sidebar.spectre_replace_single, { silent = true, noremap = true, buffer = loc.buf })
+  vim.keymap.set("n", "x", sidebar.spectre_delete_single, { silent = true, noremap = true, buffer = loc.buf })
   vim.api.nvim_win_set_width(loc.win, width)
 end
 
@@ -216,7 +233,7 @@ local preview_search_replace_buffer = function(fname, row, col)
   search_len = string.len(search)
   replace_len = string.len(replace)
 
-  vim.api.nvim_buf_set_text(0, row, col + search_len - 1, row, col + search_len -1, {replace})
+  vim.api.nvim_buf_set_text(0, row, col + search_len - 1, row, col + search_len - 1, {replace})
 
   local ns_id = vim.api.nvim_create_namespace("SearchReplace")
   local search_hl = "DiffDelete"
@@ -225,7 +242,7 @@ local preview_search_replace_buffer = function(fname, row, col)
   end
   vim.api.nvim_buf_add_highlight(0, ns_id, search_hl, row, col - 1, col + search_len - 1)
   vim.api.nvim_buf_add_highlight(0, ns_id, "DiffAdd", row, col + search_len - 1, col + search_len + replace_len - 1)
-  vim.api.nvim_win_set_cursor(0, {row, col - 1})
+  vim.api.nvim_win_set_cursor(0, {row + 1, col - 1})
   vim.cmd("normal! zz")
 
   vim.api.nvim_buf_set_option(buf, 'modifiable', false)
