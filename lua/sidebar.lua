@@ -191,6 +191,12 @@ local preview_search_replace_buffer = function(fname, row, col)
     buf = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_buf_set_name(buf, buf_name)
   end
+
+  local sidebar = require("sidebar")
+
+  vim.keymap.set("n", "<C-j>", sidebar.spectre_next, { silent = true, noremap = true, buffer = buf })
+  vim.keymap.set("n", "<C-k>", sidebar.spectre_previous, { silent = true, noremap = true, buffer = buf })
+
   vim.api.nvim_buf_set_option(buf, 'modifiable', true)
   vim.api.nvim_buf_set_option(buf, 'readonly', false)
   vim.api.nvim_set_current_buf(buf)
