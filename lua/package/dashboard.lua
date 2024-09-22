@@ -32,6 +32,7 @@ M = {
         week_header = { enable = false },
         packages = { enable = false },
         project = { enable = false },
+        mru = { cwd_only = true },
         footer = {"", "0.24 seconds faster per action"},
       },
       shortcut_type = "number"
