@@ -45,8 +45,8 @@ return {
             ["<esc>"] = "cancel",
           },
         },
-        follow_current_file = { enabled = true },
-        hijack_netrw_behavior = "open_current",
+        follow_current_file = { enabled = false },
+        hijack_netrw_behavior = "disabled",
         filtered_items = {
          visible = false,
          show_hidden_count = true,

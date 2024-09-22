@@ -5,15 +5,15 @@ M = {
     require('dashboard').setup {
       config = {
         header ={
-          ' ██████╗  ██╗      ██████╗  ██╗     ██╗   ██╗ ██╗ ███╗   ███╗' ,
-          '██╔═══██╗ ██║     ██╔═══██╗ ██║     ██║   ██║ ██║ ████╗ ████║' ,
-          '██║   ██║ ██║     ██║   ██║ ██║     ██║   ██║ ██║ ██╔████╔██║' ,
-          '██║   ██║ ██║     ██║   ██║ ██║     ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║' ,
-          '╚██████╔╝ ███████╗╚██████╔╝ ███████╗ ╚████╔╝  ██║ ██║ ╚═╝ ██║' ,
-          ' ╚═════╝  ╚══════╝ ╚═════╝  ╚══════╝  ╚═══╝   ╚═╝ ╚═╝     ╚═╝' ,
-          '                                                             ' ,
-          '               https://github.com/OleJoik/nvim              ' ,
-          '                                                             ' ,
+          ' ██████╗  ██╗      ██████╗  ██╗     ██╗   ██╗ ██╗ ███╗   ███╗',
+          '██╔═══██╗ ██║     ██╔═══██╗ ██║     ██║   ██║ ██║ ████╗ ████║',
+          '██║   ██║ ██║     ██║   ██║ ██║     ██║   ██║ ██║ ██╔████╔██║',
+          '██║   ██║ ██║     ██║   ██║ ██║     ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║',
+          '╚██████╔╝ ███████╗╚██████╔╝ ███████╗ ╚████╔╝  ██║ ██║ ╚═╝ ██║',
+          ' ╚═════╝  ╚══════╝ ╚═════╝  ╚══════╝  ╚═══╝   ╚═╝ ╚═╝     ╚═╝',
+          '                                                             ',
+          '               https://github.com/OleJoik/nvim              ',
+          '                                                             ',
         },
         shortcut = {
           { desc = '  Filetree ', group = 'DashboardShortCut', action =function() 
@@ -21,6 +21,11 @@ M = {
             vim.bo.buflisted = false
             require("sidebar").open_explorer() 
           end, key = "e"  },
+          { desc = '󰂓 Tests ', group = 'DashboardShortCut', action = function() 
+            vim.cmd("Bwipeout") 
+            vim.bo.buflisted = false
+            require("neotest").summary.toggle() 
+          end, key = "t"  },
           { desc = '󰊢 Git status ', group = 'DashboardShortCut', action = function() 
             vim.cmd("Bwipeout") 
             vim.bo.buflisted = false
