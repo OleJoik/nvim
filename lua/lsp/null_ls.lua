@@ -11,6 +11,8 @@ null_ls.setup({
 		null_ls.builtins.diagnostics.statix,
 		null_ls.builtins.completion.luasnip,
 		null_ls.builtins.formatting.stylua,
+		null_ls.builtins.formatting.terraform_fmt,
+		null_ls.builtins.diagnostics.terraform_validate,
 	},
 	on_attach = require("lsp.on_attach").on_attach,
 })
