@@ -41,6 +41,20 @@ local find_git = function()
 	return nil
 end
 
+local find_dap_scopes = function()
+	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.bo[buf].filetype == "dap_scopes" then
+			for _, win in ipairs(vim.api.nvim_list_wins()) do
+				if vim.api.nvim_win_get_buf(win) == buf then
+					return { buf = buf, win = win }
+				end
+			end
+		end
+	end
+
+	return nil
+end
+
 local focus_git = function()
 	local git_buf = find_git()
 
@@ -88,6 +102,17 @@ local focus_spectre = function()
 	return false
 end
 
+local focus_dap_scopes = function()
+	local location = find_dap_scopes()
+
+	if location then
+		vim.api.nvim_set_current_win(location.win)
+		return true
+	end
+
+	return false
+end
+
 local close_spectre = function()
 	local location = find_spectre()
 	if location then
@@ -95,15 +120,49 @@ local close_spectre = function()
 	end
 end
 
-M.open_explorer = function()
+local close_dap_scopes = function()
+	local repl_loc = find_dap_scopes()
+
+	if repl_loc then
+		local repl_width = vim.api.nvim_win_get_width(repl_loc.win)
+		vim.api.nvim_buf_delete(repl_loc.buf, { force = true })
+		return repl_width
+	end
+
+	return nil
+end
+
+local close_others = function()
 	close_spectre()
+
 	local width = close_git()
+	if width then
+		return width
+	end
+	width = close_git()
+	if width then
+		return width
+	end
+
+	width = close_dap_scopes()
+	if width then
+		return width
+	end
+
+	width = close_explorer()
+	if width then
+		return width
+	end
+end
+
+M.open_explorer = function()
+	local other_width = close_others()
 	require("neo-tree.command").execute({
 		position = "right",
 		action = "focus",
 	})
 	local current_win = vim.api.nvim_get_current_win()
-	vim.api.nvim_win_set_width(current_win, width or default_width)
+	vim.api.nvim_win_set_width(current_win, other_width or default_width)
 end
 
 M.open_git = function()
@@ -111,13 +170,36 @@ M.open_git = function()
 		return
 	end
 
-	close_spectre()
-	local other_width = close_explorer()
+	local other_width = close_others()
 	local width = other_width or default_width
 	vim.cmd("vert Git | wincmd L | vert resize " .. width)
 	-- vim.api.nvim_set_keymap('n', '<leader>o', ':Gedit <cfile> | wincmd h<CR>', { noremap = true, silent = true })
 	vim.bo.buflisted = false
-	return 5
+end
+
+M.open_dap_scopes = function()
+	if focus_dap_scopes() then
+		return
+	end
+
+	local other_width = close_others()
+
+	local width = other_width or default_width
+	local get_buffer = function()
+		local buf = vim.api.nvim_create_buf(false, false)
+		vim.api.nvim_buf_set_option(buf, "filetype", "dap_scopes")
+		return buf
+	end
+
+	local get_win = function()
+		vim.cmd("vsplit | wincmd L | vert resize " .. width)
+		local win = vim.api.nvim_get_current_win()
+		return win
+	end
+
+	local widgets = require("dap.ui.widgets")
+	local view = widgets.builder(widgets.scopes).new_buf(get_buffer).new_win(get_win).build()
+	view.open()
 end
 
 M.spectre_replace_single = function()
@@ -139,11 +221,7 @@ M.open_spectre = function(search_text)
 		return
 	end
 
-	local width = close_git()
-	if not width then
-		width = close_explorer()
-	end
-
+	local width = close_others()
 	if not width or width < spectre_width then
 		width = spectre_width
 	end
@@ -222,8 +300,8 @@ local preview_search_replace_buffer = function(fname, row, col)
 	local filetype = vim.filetype.match({ filename = fname })
 	vim.api.nvim_buf_set_option(buf, "filetype", filetype)
 
-	search_len = string.len(search)
-	replace_len = string.len(replace)
+	local search_len = string.len(search)
+	local replace_len = string.len(replace)
 
 	vim.api.nvim_buf_set_text(0, row, col + search_len - 1, row, col + search_len - 1, { replace })
 
@@ -247,7 +325,7 @@ local previous_spectre_line = function()
 	local filename = nil
 	local cursor = nil
 	for _, val in ipairs(require("spectre.actions").get_all_entries()) do
-		display_line = val["display_lnum"] + 1
+		local display_line = val["display_lnum"] + 1
 
 		if display_line < cursor_line_n and (prev < display_line or prev == cursor_line_n) then
 			prev = display_line
@@ -265,7 +343,7 @@ local next_spectre_line = function()
 	local filename = nil
 	local cursor = nil
 	for _, val in ipairs(require("spectre.actions").get_all_entries()) do
-		display_line = val["display_lnum"] + 1
+		local display_line = val["display_lnum"] + 1
 
 		if display_line > cursor_line_n and (next > display_line or next == cursor_line_n) then
 			next = display_line
@@ -287,7 +365,6 @@ M.spectre_next = function()
 		preview_search_replace_buffer(row.filename, row.cursor.lnum - 1, row.cursor.col)
 		vim.cmd("wincmd p")
 	end
-	return
 end
 
 M.spectre_previous = function()
@@ -300,8 +377,6 @@ M.spectre_previous = function()
 		preview_search_replace_buffer(row.filename, row.cursor.lnum - 1, row.cursor.col)
 		vim.cmd("wincmd p")
 	end
-
-	return
 end
 
 return M

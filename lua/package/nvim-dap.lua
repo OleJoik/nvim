@@ -1,118 +1,155 @@
-function IsCursorInPythonTest()
-    local parsers = require'nvim-treesitter.parsers'
-    local ts_utils = require'nvim-treesitter.ts_utils'
-
-    local bufnr = vim.api.nvim_get_current_buf()
-
-    local parser = parsers.get_parser(bufnr, "python")
-    if not parser then
-        return false
-    end
-
-    local node = ts_utils.get_node_at_cursor()
-
-    while node do
-        if node:type() == "function_definition" then
-            local first_child = node:child(1)
-            if first_child and first_child:type() == "identifier" then
-                local func_name = ts_utils.get_node_text(first_child)[1]
-                if func_name:match("^test_") then
-                    return func_name
-                end
-            end
-        end
-        node = node:parent()
-    end
-
-    return false
-end
-
-function PythonDebugBrowser()
-  local func_name = IsCursorInPythonTest()
-  if not func_name then
-    return
-  end
-
-  print("Running ".. func_name .. " in pytest (playwright debug mode)")
-  local command = "term PWDEBUG=1 pytest -s -k " .. func_name
-  vim.cmd(command)
-end
-
-function PythonTestSlow()
-  local func_name = IsCursorInPythonTest()
-  if not func_name then
-    return
-  end
-
-  print("Running ".. func_name .. " in pytest (playwright slow motion)")
-  local command = "term pytest --slowmo 500 --headed -s -k " .. func_name
-  vim.cmd(command)
-end
-
 local function open_hover_repl()
-  local dap = require('dap')
-  local width = 80
+	local dap = require("dap")
+	local width = 80
 
-  local winopts = {
-      width = width,
-  }
+	local winopts = {
+		width = width,
+	}
 
-  dap.repl.toggle(winopts, '50vsplit new')
+	dap.repl.toggle(winopts, "50vsplit new")
 end
 
 local function DebugPythonFile()
-  local dap = require('dap')
-  for _, cfg in ipairs(dap.configurations.python) do
-      if cfg.name == "Launch file" then
-         Selected = cfg
-      end
-  end
+	local dap = require("dap")
+	for _, cfg in ipairs(dap.configurations.python) do
+		if cfg.name == "Launch file" then
+			Selected = cfg
+		end
+	end
 
-  dap.run(Selected)
+	dap.run(Selected)
+end
+
+local function DebugProject()
+	local dap = require("dap")
+
+	if dap.configurations.project_config == nil or #dap.configurations.project_config == 0 then
+		vim.notify("No dap project configurations.\nMay be added in nvim-dap.lua")
+		return
+	end
+
+	if #dap.configurations.project_config == 1 then
+		local selected = dap.configurations.project_config[1]
+		print("Running with configuration: " .. selected.name)
+
+		dap.run(selected)
+
+		return
+	end
+
+	local configurations = ""
+	for i, cfg in ipairs(dap.configurations.project_config) do
+		configurations = configurations .. i .. ": " .. cfg.name .. "\n"
+	end
+	configurations = string.sub(configurations, 1, -2)
+
+	local input = vim.fn.input(configurations .. "\nEnter a number: ")
+	local number = tonumber(input)
+	if number then
+		if number > 0 and number <= #dap.configurations.project_config then
+			local selected = dap.configurations.project_config[number]
+			dap.run(selected)
+
+			return
+		end
+
+		vim.api.nvim_echo({
+			{ "ERROR! ", "ErrorMsg" },
+			{ "You entered: " .. number .. ", not a valid configuration.", "Normal" },
+		}, false, {})
+	else
+		vim.api.nvim_echo({
+			{ "ERROR! ", "ErrorMsg" },
+			{ "INVALID INPUT! Please enter a valid number.", "Normal" },
+		}, false, {})
+	end
 end
 
 M = {
-  {
-    "mfussenegger/nvim-dap",
-    config = function()
-      local dap = require('dap')
-      vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = '[B]reakpoint' })
-      vim.keymap.set('n', '<leader>dc', dap.continue, { desc = '[D]ebug [C]ontinue' })
-      vim.keymap.set('n', '<leader>ds', dap.terminate, { desc = '[D]ebug [S]top' })
-      vim.keymap.set('n', '<leader>dr', open_hover_repl, {noremap = true, silent = true, desc = "[D]ebug [R]epl"})
+	{
+		"mfussenegger/nvim-dap",
+		config = function()
+			local dap = require("dap")
 
-      vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
-        require('dap.ui.widgets').hover()
-      end, { desc = "[H]over selection (DAP)"})
-      vim.keymap.set('n', '<Leader>di', function()
-        local widgets = require('dap.ui.widgets')
-        widgets.centered_float(widgets.scopes)
-      end, { desc = "[I]nspect scopes (DAP)"})
+			require("dap.ext.vscode").load_launchjs(nil, { debugpy = { "project_config" } })
 
-      dap.defaults.fallback.terminal_win_cmd = '15split new'
-    end
-  },
-  {
-    "mfussenegger/nvim-dap-python",
-    config = function()
-      require('dap-python').setup('~/.virtualenvs/debugpy/bin/python')
-      require('dap-python').test_runner = 'pytest'
+			vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "[B]reakpoint" })
+			vim.keymap.set("n", "<C-s>b", dap.toggle_breakpoint, { desc = "[B]reakpoint" })
+			vim.keymap.set("n", "<C-c><C-c>", dap.continue, { desc = "[C]ontinue" })
+			vim.keymap.set("n", "<C-s><C-c>", dap.continue, { desc = "[C]ontinue" })
+			vim.keymap.set("n", "<C-s><C-s>", dap.terminate, { desc = "[S]top" })
+			vim.keymap.set("n", "<C-s><C-i>", dap.step_into, { desc = "[I]nto" })
+			vim.keymap.set("n", "<C-s><C-o>", dap.step_over, { desc = "[O]ver" })
+			vim.keymap.set("n", "<C-s><C-r>", open_hover_repl, { noremap = true, silent = true, desc = "[R]epl" })
 
-      vim.keymap.set('n', '<leader>tb', PythonDebugBrowser, {noremap = true, silent = true, desc = "Run [T]est in [B]rowser"})
-      vim.keymap.set('n', '<leader>ts', PythonTestSlow, {noremap = true, silent = true, desc = "Run [T]est [S]lowly (Browser)"})
-      vim.keymap.set('n', '<leader>td', require('dap-python').test_method, {noremap = true, silent = true, desc = "[D]ebug test"})
-      vim.keymap.set('n', '<leader>dpf', DebugPythonFile, {noremap = true, silent = true, desc = "[D]ebug [P]ython [F]ile"})
-    end
-  },
-  {
-    "theHamsta/nvim-dap-virtual-text",
-    config = function()
-      require("nvim-dap-virtual-text").setup({
-        virt_text_win_col = 80,
-        highlight_changed_variables = true
-      })
-    end
-  }
+			vim.keymap.set({ "n", "v" }, "<C-s><C-h>", require("dap.ui.widgets").hover, { desc = "[H]over DAP" })
+			-- vim.keymap.set("n", "<C-s><C-o>", require("sidebar").open_dap_scopes, { desc = "[O]pen Scopes" })
+			vim.keymap.set("n", "<C-s><C-o>", function()
+				local widgets = require("dap.ui.widgets")
+				local my_sidebar = widgets.sidebar(widgets.scopes)
+				my_sidebar.open()
+			end, { desc = "[O]pen Scopes" })
+
+			vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
+			vim.fn.sign_define(
+				"DapStopped",
+				{ text = " ", texthl = "ErrorMsg", linehl = "DebugBreakpointLine", numhl = "" }
+			)
+
+			vim.keymap.set(
+				"n",
+				"<C-s><C-t>",
+				require("dap-python").test_method,
+				{ noremap = true, silent = true, desc = "[T]est" }
+			)
+			vim.keymap.set("n", "<C-s><C-f>", DebugPythonFile, { noremap = true, silent = true, desc = "[F]ile" })
+			vim.keymap.set("n", "<C-s><C-p>", DebugProject, { noremap = true, silent = true, desc = "[P]roject" })
+
+			vim.keymap.set("n", "<C-s><C-b>", function()
+				local foo = require("dap.breakpoints").get()
+
+				local lines = {}
+				for buf_id, bps in pairs(foo) do
+					local buffer_name = vim.fn.bufname(buf_id)
+					table.insert(lines, "")
+					table.insert(lines, "### " .. buf_id .. ": " .. buffer_name)
+
+					for _, bp in ipairs(bps) do
+						local line = vim.api.nvim_buf_get_lines(buf_id, bp.line - 1, bp.line, false)[1]
+						table.insert(lines, "- " .. bp.line .. ": " .. line)
+					end
+
+					local buf = vim.api.nvim_create_buf(false, true)
+					vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+					vim.api.nvim_set_current_buf(buf)
+				end
+			end, { noremap = true, silent = true, desc = "List [B]reakpoints" })
+
+			dap.defaults.fallback.terminal_win_cmd = "15split new"
+		end,
+	},
+	{
+		"mfussenegger/nvim-dap-python",
+		config = function()
+			local dap = require("dap")
+			require("dap-python").setup("/home/olol/.nix-profile/bin/python")
+			require("dap-python").test_runner = "pytest"
+
+			local debug_python_file = dap.configurations.python[1]
+			dap.configurations.python = { debug_python_file }
+		end,
+	},
+	{
+		"theHamsta/nvim-dap-virtual-text",
+		config = function()
+			require("nvim-dap-virtual-text").setup({
+				enabled_commands = true,
+				virt_text_win_col = 40,
+				highlight_changed_variables = true,
+				all_references = true,
+			})
+		end,
+	},
 }
 
 return M
