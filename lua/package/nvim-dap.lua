@@ -83,12 +83,13 @@ M = {
 			vim.keymap.set("n", "<C-s><C-r>", open_hover_repl, { noremap = true, silent = true, desc = "[R]epl" })
 
 			vim.keymap.set({ "n", "v" }, "<C-s><C-h>", require("dap.ui.widgets").hover, { desc = "[H]over DAP" })
-			-- vim.keymap.set("n", "<C-s><C-o>", require("sidebar").open_dap_scopes, { desc = "[O]pen Scopes" })
-			vim.keymap.set("n", "<C-s><C-o>", function()
-				local widgets = require("dap.ui.widgets")
-				local my_sidebar = widgets.sidebar(widgets.scopes)
-				my_sidebar.open()
-			end, { desc = "[O]pen Scopes" })
+			vim.keymap.set("n", "<C-s><C-o>", require("sidebar").open_dap_scopes, { desc = "[O]pen Scopes" })
+			-- vim.keymap.set("n", "<C-s><C-o>", function()
+			-- 	local widgets = require("dap.ui.widgets")
+			-- 	local my_sidebar = widgets.sidebar(widgets.scopes)
+			-- 	my_sidebar.open()
+			-- 	-- buffer can be found. pattern: dap-scopes-<buf_id>. Its unlisted.
+			-- end, { desc = "[O]pen Scopes" })
 
 			vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
 			vim.fn.sign_define(

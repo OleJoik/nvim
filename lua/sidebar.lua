@@ -43,7 +43,8 @@ end
 
 local find_dap_scopes = function()
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-		if vim.bo[buf].filetype == "dap_scopes" then
+		local buf_name = vim.api.nvim_buf_get_name(buf)
+		if buf_name:find("dap-scopes-", 1, true) then
 			for _, win in ipairs(vim.api.nvim_list_wins()) do
 				if vim.api.nvim_win_get_buf(win) == buf then
 					return { buf = buf, win = win }
@@ -185,21 +186,15 @@ M.open_dap_scopes = function()
 	local other_width = close_others()
 
 	local width = other_width or default_width
-	local get_buffer = function()
-		local buf = vim.api.nvim_create_buf(false, false)
-		vim.api.nvim_buf_set_option(buf, "filetype", "dap_scopes")
-		return buf
-	end
-
-	local get_win = function()
-		vim.cmd("vsplit | wincmd L | vert resize " .. width)
-		local win = vim.api.nvim_get_current_win()
-		return win
-	end
 
 	local widgets = require("dap.ui.widgets")
-	local view = widgets.builder(widgets.scopes).new_buf(get_buffer).new_win(get_win).build()
-	view.open()
+	local my_sidebar = widgets.sidebar(widgets.scopes, nil, "vsplit | wincmd L | vert resize " .. width)
+	my_sidebar.open()
+	local loc = find_dap_scopes()
+	if loc then
+		vim.api.nvim_set_current_win(loc.win)
+		vim.api.nvim_buf_set_option(0, "wrap", false)
+	end
 end
 
 M.spectre_replace_single = function()
