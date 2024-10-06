@@ -188,39 +188,34 @@ M.remove_buf_from_win = function(buf, win, opts)
 		return
 	end
 
-	local soft_remove_buf = function()
-		table.remove(win_data["bufs"], buf_index)
-		if #win_data["bufs"] == 0 then
-			local new_buf = vim.api.nvim_create_buf(false, true)
-			vim.api.nvim_win_set_buf(win, new_buf)
-		elseif buf_index == 1 then
-			vim.api.nvim_win_set_buf(win, win_data["bufs"][buf_index].buf)
-		else
-			vim.api.nvim_win_set_buf(win, win_data["bufs"][buf_index - 1].buf)
-		end
-		M.write_log("Successfully removed buf " .. buf .. " from win " .. win)
-	end
-
-	local window_buffers = vim.fn.win_findbuf(buf)
-	if #window_buffers == 1 then
-		if opts and opts.close_buffer_if_unused then
-			M.write_log("Deleting buffer " .. buf)
-			local new_buf = vim.api.nvim_create_buf(false, true)
-			vim.api.nvim_win_set_buf(win, new_buf)
+	if opts and opts.close_buffer_if_unused then
+		local window_buffers = vim.fn.win_findbuf(buf)
+		if #window_buffers == 1 then
+			if #win_data["bufs"] == 1 then
+				local new_buf = vim.api.nvim_create_buf(false, true)
+				vim.api.nvim_win_set_buf(win, new_buf)
+			end
 			local success, err = pcall(require("bufdelete").bufwipeout, buf)
 			if not success and err ~= nil then
 				M.write_log(err, LogLevel.ERROR)
 				vim.notify(err, vim.log.levels.ERROR)
+				return
 			else
-				table.remove(win_data["bufs"], buf_index)
 				M.write_log("Successfully deleted buf " .. buf)
 			end
-		else
-			soft_remove_buf()
 		end
-	else
-		soft_remove_buf()
 	end
+
+	table.remove(win_data["bufs"], buf_index)
+	if #win_data["bufs"] == 0 then
+		local new_buf = vim.api.nvim_create_buf(false, true)
+		vim.api.nvim_win_set_buf(win, new_buf)
+	elseif buf_index == 1 then
+		vim.api.nvim_win_set_buf(win, win_data["bufs"][buf_index].buf)
+	else
+		vim.api.nvim_win_set_buf(win, win_data["bufs"][buf_index - 1].buf)
+	end
+	M.write_log("Successfully removed buf " .. buf .. " from win " .. win)
 
 	M.update()
 end
