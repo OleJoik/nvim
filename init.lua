@@ -101,3 +101,5 @@ vim.api.nvim_create_autocmd("FileType", {
 
 require("terminal").setup()
 require("git_graph")
+
+require("windomancer").setup()

@@ -32,7 +32,17 @@ vim.api.nvim_set_keymap("n", "<C-k>", "<C-w>k", { noremap = true, silent = true 
 vim.api.nvim_set_keymap("n", "<C-l>", "<C-w>l", { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', '<C-w>j', ':split<CR><C-w>j', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', '<C-w>l', ':vsplit<CR><C-w>l', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<C-q>", "<cmd>q<CR>", { noremap = true, silent = true })
+
+local close_window = function()
+	local windo = require("windomancer")
+	local win = vim.api.nvim_get_current_win()
+	if windo.is_windo_window(win) then
+		windo.close_win(win)
+	else
+		vim.cmd("q")
+	end
+end
+vim.keymap.set("n", "<C-q>", close_window, { noremap = true, silent = true })
 
 -- vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "[P]aste without overwriting" })
 -- vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[Y]ank to clipboard" })
