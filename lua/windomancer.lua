@@ -93,7 +93,7 @@ M.bwipeout = function(buf)
 		if windomancer_bufs ~= nil then
 			for _, b in ipairs(windomancer_bufs) do
 				if b.buf ~= nil then
-					windomancer_bufs[buf] = nil
+					table.remove(windomancer_bufs, buf)
 				end
 			end
 		end
@@ -127,7 +127,7 @@ M.close_win = function(win)
 				vim.notify(err, vim.log.levels.ERROR)
 				error_closing_buf = true
 			else
-				win_data["bufs"][i] = nil
+				table.remove(win_data["bufs"], i)
 				M.write_log("Successfully closed buffer " .. b.buf)
 			end
 		end
@@ -153,6 +153,76 @@ M.close_win = function(win)
 	else
 		M.write_log("Attempted to close win " .. win .. ", but it is not a valid window.", LogLevel.WARN)
 	end
+end
+
+M.remove_buf_from_win = function(buf, win, opts)
+	M.write_log("Removing buf " .. buf .. " from win " .. win)
+	local win_data = M._state[win]
+	if win_data == nil then
+		M.write_log("Win " .. win .. " is not known to windomancer. Will not remove buf " .. buf, LogLevel.ERROR)
+		return
+	end
+
+	local bufs = win_data["bufs"]
+	if bufs == nil then
+		M.write_log("Win " .. win .. " does not have bufs. State corrupted.", LogLevel.ERROR)
+		return
+	end
+
+	local buf_data = nil
+	local buf_index = nil
+	for i, b in ipairs(bufs) do
+		if b.buf == buf then
+			buf_data = b
+			buf_index = i
+		end
+	end
+
+	if buf_data == nil or buf_index == nil then
+		M.write_log("Could not find buf " .. buf .. " in win " .. win, LogLevel.ERROR)
+		return
+	end
+
+	if vim.bo[buf].modified then
+		vim.notify("Could not delete buffer " .. buf .. ", it has unsaved changes", vim.log.levels.ERROR)
+		return
+	end
+
+	local soft_remove_buf = function()
+		table.remove(win_data["bufs"], buf_index)
+		if #win_data["bufs"] == 0 then
+			local new_buf = vim.api.nvim_create_buf(false, true)
+			vim.api.nvim_win_set_buf(win, new_buf)
+		elseif buf_index == 1 then
+			vim.api.nvim_win_set_buf(win, win_data["bufs"][buf_index].buf)
+		else
+			vim.api.nvim_win_set_buf(win, win_data["bufs"][buf_index - 1].buf)
+		end
+		M.write_log("Successfully removed buf " .. buf .. " from win " .. win)
+	end
+
+	local window_buffers = vim.fn.win_findbuf(buf)
+	if #window_buffers == 1 then
+		if opts and opts.close_buffer_if_unused then
+			M.write_log("Deleting buffer " .. buf)
+			local new_buf = vim.api.nvim_create_buf(false, true)
+			vim.api.nvim_win_set_buf(win, new_buf)
+			local success, err = pcall(require("bufdelete").bufwipeout, buf)
+			if not success and err ~= nil then
+				M.write_log(err, LogLevel.ERROR)
+				vim.notify(err, vim.log.levels.ERROR)
+			else
+				table.remove(win_data["bufs"], buf_index)
+				M.write_log("Successfully deleted buf " .. buf)
+			end
+		else
+			soft_remove_buf()
+		end
+	else
+		soft_remove_buf()
+	end
+
+	M.update()
 end
 
 M.focus_buffer = function(focused_win_id, focused_buf_id)
@@ -190,7 +260,7 @@ M.move_buffer = function(from_win, to_win, buf)
 			if is_from_window then
 				for i, b in ipairs(windomancer_bufs) do
 					if b.buf == buf then
-						windomancer_bufs[i] = nil
+						table.remove(windomancer_bufs, i)
 						break
 					end
 					previous_buffer = b.buf
@@ -260,8 +330,8 @@ end
 M.update = function()
 	for win, state in pairs(M._state) do
 		local offset = get_buffer_offset()
-		local spaces = string.rep(" ", offset - 2)
-		local winline = spaces .. win .. " "
+		local spaces = string.rep(" ", offset)
+		local winline = spaces
 
 		for _, buf in ipairs(state["bufs"]) do
 			if vim.api.nvim_buf_is_valid(buf.buf) then
@@ -270,9 +340,9 @@ M.update = function()
 
 				local tab = ""
 				if is_modified then
-					tab = tab .. " " .. filename .. " + "
+					tab = tab .. "   " .. filename .. " + "
 				else
-					tab = tab .. "  " .. filename .. " "
+					tab = tab .. "   " .. filename .. "   "
 				end
 
 				if buf.active == "inactive" then
@@ -292,26 +362,6 @@ M.update = function()
 		vim.wo[win].winbar = winline
 	end
 end
-
--- M.reset = function()
--- 	for win, _ in pairs(M._state) do
--- 		vim.wo[win].winbar = nil
--- 	end
---
--- 	vim.api.nvim_clear_autocmds({
--- 		event = "BufEnter",
--- 		pattern = "*",
--- 		group = M.augroup,
--- 	})
---
--- 	vim.api.nvim_clear_autocmds({
--- 		event = "BufModifiedSet",
--- 		pattern = "*",
--- 		group = M.augroup,
--- 	})
---
--- 	M._state = {}
--- end
 
 M.setup = function()
 	vim.api.nvim_create_autocmd("VimEnter", {
@@ -381,12 +431,6 @@ M.setup = function()
 				if is_windo then
 					M.focus_buffer(entering_win, entering_buf)
 					M.update()
-					-- else
-					-- 	local buftype = vim.bo.buftype
-					-- 	if buftype == "" and ev.file ~= "" then
-					-- 		M.write_log('Buftype "" and ev.file ~= "". Creating WINDO!')
-					-- 		M.create()
-					-- 	end
 				end
 			end)
 		end,

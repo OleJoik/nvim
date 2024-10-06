@@ -1,6 +1,5 @@
 require("git_functions")
 
-local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 
 vim.keymap.set("n", "<C-a>", function()
@@ -24,7 +23,6 @@ vim.keymap.set("x", "<", "<gv")
 -- map('n', '<C-h>', '<Cmd>BufferPrevious<CR>', opts)
 -- map('n', '<C-<>', '<Cmd>BufferMovePrevious<CR>', opts)
 -- map('n', '<C->>', '<Cmd>BufferMoveNext<CR>', opts)
-map("n", "<C-x>", "<Cmd>Bwipeout<CR>", opts)
 
 vim.api.nvim_set_keymap("n", "<C-h>", "<C-w>h", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<C-j>", "<C-w>j", { noremap = true, silent = true })
@@ -43,6 +41,18 @@ local close_window = function()
 	end
 end
 vim.keymap.set("n", "<C-q>", close_window, { noremap = true, silent = true })
+
+local close_buf = function()
+	local windo = require("windomancer")
+	local win = vim.api.nvim_get_current_win()
+	local buf = vim.api.nvim_get_current_buf()
+	if windo.is_windo_window(win) then
+		windo.remove_buf_from_win(buf, win, { close_buffer_if_unused = true })
+	else
+		vim.cmd("Bwipeout")
+	end
+end
+vim.keymap.set("n", "<C-x>", close_buf, opts)
 
 -- vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "[P]aste without overwriting" })
 -- vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[Y]ank to clipboard" })
@@ -139,4 +149,4 @@ function RunFile()
 end
 
 vim.keymap.set("n", "<leader><leader>x", RunFile, { desc = "Execute the current file" })
-vim.keymap.set("n", "|", ":bprev<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Tab>", ":b#<CR>", { noremap = true, silent = true })
