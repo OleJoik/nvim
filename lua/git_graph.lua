@@ -191,9 +191,9 @@ local function open_graph()
 	end, { buffer = buf2 })
 end
 
-vim.keymap.set("n", "GG", function()
+vim.keymap.set("n", "<C-g><C-g>", function()
 	open_graph()
-end)
+end, { desc = "[G]raph" })
 --
 -- open_graph()
 --

@@ -46,9 +46,9 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 -- vim.keymap.set('n', '<leader>n', ':bnext<CR>')
 -- vim.keymap.set('n', '<leader>ga', Git_add, {desc='Treeview [G]it [A]dd'})
 -- vim.keymap.set('n', '<leader>gr', Git_restore, {desc='Treeview [G]it [R]restore (Revert)'})
-vim.keymap.set({ "n", "v" }, "<leader>go", ":DiffviewOpen<CR>", { desc = "[G]it [O]pen" })
-vim.keymap.set({ "n", "v" }, "<leader>gc", ":DiffviewClose<CR>", { desc = "[G]it [C]lose" })
--- vim.keymap.set("n", '<C-g>', ':LazyGit<CR>', { desc = '[G]it [G]it!' })
+-- vim.keymap.set({ "n", "v" }, "<leader>go", ":DiffviewOpen<CR>", { desc = "[G]it [O]pen" })
+-- vim.keymap.set({ "n", "v" }, "<leader>gc", ":DiffviewClose<CR>", { desc = "[G]it [C]lose" })
+vim.keymap.set("n", "<C-g><C-l>", ":LazyGit<CR>", { desc = "[L]azygit" })
 vim.keymap.set("n", "<leader>gf", ":LazyGitFilterCurrentFile<CR>", { desc = "[G]it commits in current [F]ile" })
 
 -- vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
@@ -111,7 +111,7 @@ vim.keymap.set(
 )
 
 vim.keymap.set("n", "<C-e>", require("sidebar").open_explorer, { silent = true, noremap = true })
-vim.keymap.set("n", "<C-g>", require("sidebar").open_git, { silent = true, noremap = true })
+vim.keymap.set("n", "<C-g><C-o>", require("sidebar").open_git, { silent = true, noremap = true, desc = "[O]pen git" })
 local search_replace = function()
 	require("sidebar").open_spectre("")
 end
@@ -129,3 +129,4 @@ function RunFile()
 end
 
 vim.keymap.set("n", "<leader><leader>x", RunFile, { desc = "Execute the current file" })
+vim.keymap.set("n", "|", ":bprev<CR>", { noremap = true, silent = true })
