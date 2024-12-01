@@ -43,33 +43,24 @@ return {
 	-- "gc" to comment visual regions/lines
 	{ "numToStr/Comment.nvim", opts = {} },
 
-	{
-		"folke/flash.nvim",
-		event = "VeryLazy",
-		---@type Flash.Config
-		opts = {},
-		-- stylua: ignore
-		keys = {
-			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-		},
-	},
-	{
-		"OleJoik/bufbouncer.nvim",
-		config = function()
-			require("bufbouncer").setup({
-				debug = {
-					show_win_nr = false,
-					show_buf_nr = false,
-				},
-			})
-		end,
-	},
-	{
-		"OleJoik/gitgraph.nvim",
-		config = function()
-			require("gitgraph").setup()
-		end,
-	},
+	-- },
+	-- {
+	-- 	"OleJoik/bufbouncer.nvim",
+	-- 	config = function()
+	-- 		require("bufbouncer").setup({
+	-- 			debug = {
+	-- 				show_win_nr = false,
+	-- 				show_buf_nr = false,
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
+	-- {
+	-- 	"OleJoik/gitgraph.nvim",
+	-- 	config = function()
+	-- 		require("gitgraph").setup()
+	-- 	end,
+	-- },
 
 	{
 		"OleJoik/squeel.nvim",
