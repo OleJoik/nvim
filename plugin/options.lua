@@ -4,11 +4,14 @@
 --
 
 -- Set highlight on search
+--
 vim.o.hlsearch = false
 vim.o.tabstop = 4 -- Set the width of a tab to 4 spaces
 vim.o.showtabline = 1
 vim.o.shiftwidth = 4 -- Set the width of an indent to 4 spaces
 vim.o.expandtab = true -- Convert tabs to spaces
+
+vim.opt.cursorline = true
 
 -- Enable search highlighting
 vim.o.hlsearch = true
@@ -55,3 +58,5 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 
 vim.o.splitright = true
 vim.o.splitbelow = true
+
+vim.o.exrc = true

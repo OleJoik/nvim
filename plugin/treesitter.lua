@@ -18,10 +18,11 @@ require("nvim-treesitter.configs").setup({
 		"vim",
 		"terraform",
 		"hcl",
+		"sql",
 	},
 
 	-- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-	auto_install = false,
+	auto_install = true,
 
 	highlight = { enable = true },
 	indent = { enable = true },
@@ -70,3 +71,11 @@ require("nvim-treesitter.configs").setup({
 		},
 	},
 })
+
+-- run these after treesitter is configured...
+local squeel = require("squeel")
+
+squeel.setup()
+vim.keymap.set("n", "<leader>fo", function()
+	squeel.format()
+end)

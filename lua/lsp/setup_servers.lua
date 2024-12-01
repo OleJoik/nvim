@@ -45,6 +45,7 @@ M = {
 				},
 			},
 			on_attach = on_attach,
+			capabilities = capabilities,
 		})
 
 		require("lspconfig").pyright.setup({
@@ -65,6 +66,8 @@ M = {
 					useLibraryCodeForTypes = true,
 				},
 			},
+			on_attach = on_attach,
+			capabilities = capabilities,
 		})
 
 		require("lspconfig").lua_ls.setup({
@@ -72,10 +75,56 @@ M = {
 				Lua = {
 					workspace = { checkThirdParty = false },
 					telemetry = { enable = false },
+					diagnostics = {
+						globals = { "vim" },
+					},
 				},
 			},
 		})
 		require("lspconfig").terraformls.setup({})
+
+		require("lspconfig").tailwindcss.setup({
+			filetypes = {
+				"css",
+				"scss",
+				"sass",
+				"html",
+				"javascript",
+				"javascriptreact",
+				"typescript",
+				"typescriptreact",
+				"htmldjango",
+				"python",
+				"templ",
+			},
+			settings = {
+				includeLanguages = {
+					typescript = "javascript",
+					typescriptreact = "javascript",
+					htmldjango = "html",
+					python = "html",
+				},
+				tailwindCSS = {
+
+					-- 	classAttributes = {
+					-- 		"class",
+					-- 		"className",
+					-- 		"class_",
+					-- 	},
+					experimental = {
+						classRegex = {
+							-- Single line strings:
+							[[class_="([^"]*)]], -- for double quoted strings
+							[[class_='([^']*)]], -- for single quoted strings
+
+							-- Multi-line strings:
+							[[class_="""([^"]*)"""]], -- for multi-line double quoted strings
+							[[class_='''([^']*)''']], -- for multi-line single quoted strings
+						},
+					},
+				},
+			},
+		})
 	end,
 }
 
