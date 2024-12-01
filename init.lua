@@ -50,22 +50,3 @@ vim.api.nvim_create_autocmd("FileType", {
 
 require("terminal").setup()
 require("git_graph")
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "help" },
-	callback = function()
-		local buf_help = vim.api.nvim_get_current_buf()
-		local win_help = vim.api.nvim_get_current_win()
-
-		vim.cmd("wincmd p")
-
-		local win_old = vim.api.nvim_get_current_win()
-
-		vim.api.nvim_win_set_buf(win_old, buf_help)
-		vim.api.nvim_win_close(win_help, true)
-
-		-- This doesnt quite work. Sometimes, the buffer is unlisted and I cannot close it.
-		-- Check if maybe the contents can be loaded into a listed buffer first,
-		-- And also scratch, perhaps. Checky checky.
-	end,
-})
