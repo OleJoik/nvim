@@ -17,7 +17,8 @@ vim.opt.cursorline = true
 vim.o.hlsearch = true
 vim.o.incsearch = true
 -- Make line numbers default
-vim.wo.number = true
+-- vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = "a"
@@ -41,7 +42,7 @@ vim.g.netrw_banner = 0
 -- netrw_menu=0
 
 -- use number column as signcolumn
-vim.opt.signcolumn = "number"
+-- vim.opt.signcolumn = "number"
 
 -- Decrease update time
 vim.o.updatetime = 250
