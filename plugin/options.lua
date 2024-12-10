@@ -53,7 +53,7 @@ vim.g.netrw_banner = 0
 -- netrw_menu=0
 
 -- use number column as signcolumn
--- vim.opt.signcolumn = "number"
+vim.opt.signcolumn = "number"
 
 -- Decrease update time
 vim.o.updatetime = 250
