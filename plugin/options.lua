@@ -20,7 +20,7 @@ vim.cmd([[
 ]])
 
 vim.opt.list = true
-vim.opt.listchars = { space = "·", eol = "↵" }
+vim.opt.listchars = { space = "·", eol = "↵", tab = "»·" }
 
 vim.opt.cursorline = true
 
