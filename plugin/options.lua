@@ -11,6 +11,17 @@ vim.o.showtabline = 1
 vim.o.shiftwidth = 4 -- Set the width of an indent to 4 spaces
 vim.o.expandtab = true -- Convert tabs to spaces
 
+vim.cmd([[
+    highlight NonText guifg=#3c3c3c gui=nocombine
+]])
+
+vim.cmd([[
+    highlight Whitespace guifg=#3c3c3c gui=nocombine
+]])
+
+vim.opt.list = true
+vim.opt.listchars = { space = "·", eol = "↵" }
+
 vim.opt.cursorline = true
 
 -- Enable search highlighting

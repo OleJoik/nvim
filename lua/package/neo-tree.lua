@@ -12,6 +12,7 @@ return {
 			use_default_mappings = false,
 			filesystem = {
 				window = {
+					position = "right",
 					mappings = {
 						["<cr>"] = "open",
 						["<2-LeftMouse>"] = "open",
@@ -46,7 +47,7 @@ return {
 					},
 				},
 				follow_current_file = { enabled = false },
-				hijack_netrw_behavior = "disabled",
+				hijack_netrw_behavior = "open_default",
 				filtered_items = {
 					visible = false,
 					show_hidden_count = true,

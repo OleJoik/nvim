@@ -50,3 +50,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
 require("terminal").setup()
 require("git_graph")
+
+require("ibl").setup({
+	indent = { char = "┊" },
+	scope = { enabled = false },
+})

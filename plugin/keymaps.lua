@@ -32,27 +32,27 @@ vim.api.nvim_set_keymap("n", "<C-l>", "<C-w>l", { noremap = true, silent = true 
 -- vim.api.nvim_set_keymap('n', '<C-w>l', ':vsplit<CR><C-w>l', { noremap = true, silent = true })
 
 local close_window = function()
-	local bbouncer = require("bufbouncer")
-	local bbouncer_cmd = require("bufbouncer.commands")
-	local win = vim.api.nvim_get_current_win()
-	if bbouncer.is_bouncer_window(win) then
-		bbouncer_cmd.close_win(win)
-	else
-		vim.cmd("q")
-	end
+	-- local bbouncer = require("bufbouncer")
+	-- local bbouncer_cmd = require("bufbouncer.commands")
+	-- local win = vim.api.nvim_get_current_win()
+	-- if bbouncer.is_bouncer_window(win) then
+	-- 	bbouncer_cmd.close_win(win)
+	-- else
+	vim.cmd("q")
+	-- end
 end
 vim.keymap.set("n", "<C-q>", close_window, { noremap = true, silent = true })
 
 local close_buf = function()
-	local bbouncer = require("bufbouncer")
-	local commands = require("bufbouncer.commands")
-	local win = vim.api.nvim_get_current_win()
-	local buf = vim.api.nvim_get_current_buf()
-	if bbouncer.is_bouncer_window(win) then
-		commands.remove_buf_from_win(buf, win, { close_buffer_if_unused = true })
-	else
-		vim.cmd("Bwipeout")
-	end
+	-- local bbouncer = require("bufbouncer")
+	-- local commands = require("bufbouncer.commands")
+	-- local win = vim.api.nvim_get_current_win()
+	-- local buf = vim.api.nvim_get_current_buf()
+	-- if bbouncer.is_bouncer_window(win) then
+	-- 	commands.remove_buf_from_win(buf, win, { close_buffer_if_unused = true })
+	-- else
+	vim.cmd("Bwipeout")
+	-- end
 end
 vim.keymap.set("n", "<C-x>", close_buf, opts)
 
