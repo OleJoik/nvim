@@ -3,14 +3,15 @@ require("git_functions")
 local opts = { noremap = true, silent = true }
 
 vim.keymap.set("n", "<C-a>", function()
-	vim.api.nvim_exec("normal! ggVG", false)
+	vim.cmd("normal! ggVG", false)
 end, { desc = "Select [A]ll" })
+
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
 vim.keymap.set("n", "<C-BS>", "dvb")
 vim.keymap.set("i", "<C-BS>", "<C-W>")
 
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "J", "5jzz")
 vim.keymap.set("n", "K", "5kzz")
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
