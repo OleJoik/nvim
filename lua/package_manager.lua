@@ -16,7 +16,6 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   { import = "package" },
-  "kdheepak/lazygit.nvim",
   "famiu/bufdelete.nvim",
   "mg979/vim-visual-multi",
   -- "OleJoik/diff.nvim",
