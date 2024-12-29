@@ -67,19 +67,17 @@ local on_attach = function(client, bufnr)
 
 
 
-  local focus_id = "test-focuser"
+  -- local focus_id = "test-focuser"
   local hover_handler = function(_, hover_data)
     local current_line = vim.api.nvim_win_get_cursor(vim.api.nvim_get_current_win())[1]
     local diagnostics = vim.diagnostic.get(0, { lnum = current_line - 1 })
 
-    print(vim.inspect(diagnostics))
     local severity_to_hl = {
       [vim.diagnostic.severity.ERROR] = "DiagnosticFloatingError",
       [vim.diagnostic.severity.WARN] = "DiagnosticFloatingWarn",
       [vim.diagnostic.severity.INFO] = "DiagnosticFloatingInfo",
       [vim.diagnostic.severity.HINT] = "DiagnosticFloatingHint",
     }
-
 
     local messages = {}
     local highlights = {}
