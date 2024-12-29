@@ -14,12 +14,12 @@ return {
               click = "v:lua.ScSa"
             },
             { text = { builtin.foldfunc, " " }, click = "v:lua.ScFa" },
-            { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa", },
-            -- Gitsigns..
-            -- {
-            --   sign = { name = { ".*" }, maxwidth = 2, colwidth = 1, auto = false, wrap = true },
-            --   click = "v:lua.ScSa"
-            -- },
+            { text = { builtin.lnumfunc },      click = "v:lua.ScLa", },
+            {
+              sign = { namespace = { ".*" }, maxwidth = 1, colwidth = 1, auto = false, wrap = true },
+              click = "v:lua.ScSa"
+            },
+            { text = { " " } },
           },
           ft_ignore = { "neo-tree" },
           bt_ignore = { "terminal" },

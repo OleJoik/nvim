@@ -19,8 +19,8 @@ require("lazy").setup({
   "kdheepak/lazygit.nvim",
   "famiu/bufdelete.nvim",
   "mg979/vim-visual-multi",
-  "OleJoik/diff.nvim",
-  { "OleJoik/resize-border.nvim", opts = {} }
+  -- "OleJoik/diff.nvim",
+  -- { "OleJoik/resize-border.nvim", opts = {} }
 }, {
   change_detection = {
     notify = false,
