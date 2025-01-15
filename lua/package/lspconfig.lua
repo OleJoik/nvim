@@ -133,17 +133,17 @@ local on_attach = function(client, bufnr)
       hover_content = hover_content .. hover .. "\n"
     end
 
+    if #hover_content > 0 then
+      local buf = vim.lsp.util.open_floating_preview(
+        { hover_content },
+        "markdown",
+        {}
+      -- { focus_id = focus_id }
+      )
 
-
-    local buf = vim.lsp.util.open_floating_preview(
-      { hover_content },
-      "markdown",
-      {}
-    -- { focus_id = focus_id }
-    )
-
-    for _, hl in ipairs(highlights) do
-      vim.api.nvim_buf_add_highlight(buf, -1, hl.hl_group, hl.line + 1, hl.col_start, hl.col_end)
+      for _, hl in ipairs(highlights) do
+        vim.api.nvim_buf_add_highlight(buf, -1, hl.hl_group, hl.line + 1, hl.col_start, hl.col_end)
+      end
     end
   end
 
