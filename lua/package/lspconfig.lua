@@ -172,6 +172,28 @@ return {
       local capabilities = require("blink.cmp").get_lsp_capabilities()
       require("lspconfig").lua_ls.setup({ capabilities = capabilities, on_attach = on_attach, })
       require("lspconfig").ts_ls.setup({ capabilities = capabilities, on_attach = on_attach })
+      require("lspconfig").ruff.setup({
+        init_options = {
+          settings = {
+            -- Any extra CLI arguments for `ruff` go here.
+            args = {},
+          },
+        },
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
+      require("lspconfig").pyright.setup({
+        settings = {
+          pyright = {
+            -- Using Ruff's import organizer
+            disableOrganizeImports = true,
+          },
+        },
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
 
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
@@ -193,9 +215,39 @@ return {
                 vim.diagnostic.enable()
               end,
             })
+          else
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              buffer = args.buf,
+              callback = function()
+                if not _G.skip_formatting_buffers[args.buf] then
+                  vim.lsp.buf.format({ async = false })
+                end
+              end,
+            })
           end
         end,
       })
     end,
   },
+  {
+    "nvimtools/none-ls.nvim",
+    config = function()
+      local null_ls = require("null-ls")
+
+      local sources = {}
+
+      if vim.fn.executable("mypy") == 1 then
+        print("mypy is available on PATH and and is loaded with null-ls")
+        table.insert(sources, null_ls.builtins.diagnostics.mypy)
+      else
+        print("mypy is not available on PATH and will not be loaded by null-ls")
+      end
+
+      if #sources > 0 then
+        null_ls.setup({
+          sources = sources,
+        })
+      end
+    end
+  }
 }
