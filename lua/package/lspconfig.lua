@@ -237,10 +237,8 @@ return {
       local sources = {}
 
       if vim.fn.executable("mypy") == 1 then
-        print("mypy is available on PATH and and is loaded with null-ls")
+        print("mypy is loaded with null-ls")
         table.insert(sources, null_ls.builtins.diagnostics.mypy)
-      else
-        print("mypy is not available on PATH and will not be loaded by null-ls")
       end
 
       if #sources > 0 then
