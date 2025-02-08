@@ -55,7 +55,7 @@ return {
             },
             { text = { " " } },
           },
-          ft_ignore = { "neo-tree" },
+          ft_ignore = { "neo-tree", "oil" },
           bt_ignore = { "terminal" },
         })
       end,
