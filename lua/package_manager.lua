@@ -27,6 +27,6 @@ require("lazy").setup({
   dev = {
     path = "~/repos/personal",
     patterns = { "OleJoik" },
-    fallback = false,
+    fallback = true,
   },
 })

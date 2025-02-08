@@ -25,7 +25,9 @@ return {
       "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
     },
-    lazy = true,
+    keys = {
+      { "<C-e>", "<cmd>Neotree toggle<cr>", desc = "NeoTree" },
+    },
     config = function()
       require("neo-tree").setup({
         close_if_last_window = true,
@@ -122,14 +124,11 @@ return {
           },
         },
       })
-      vim.keymap.set("n", "<C-e>", function()
-        vim.cmd("Neotree toggle")
-      end
-      )
     end,
   },
   {
-    "refractalize/oil-git-status.nvim",
+    "OleJoik/oil-git-status.nvim",
+    branch = "fs-events",
     dependencies = {
       {
         'stevearc/oil.nvim',
@@ -140,6 +139,8 @@ return {
           require("oil").setup({
             default_file_explorer = true,
             skip_confirm_for_simple_edits = true,
+            watch_for_changes = true,
+            columns = {},
             keymaps = {
               ["g?"] = { "actions.show_help", mode = "n" },
               ["<CR>"] = "actions.select",
@@ -148,7 +149,8 @@ return {
               ["<C-t>"] = { "actions.select", opts = { tab = true } },
               ["<C-p>"] = false,
               ["<C-c>"] = { "actions.close", mode = "n" },
-              ["<C-l>"] = "actions.refresh",
+              ["<C-l>"] = false,
+              ["<C-r>"] = "actions.refresh",
               ["-"] = { "actions.parent", mode = "n" },
               ["_"] = { "actions.open_cwd", mode = "n" },
               ["`"] = { "actions.cd", mode = "n" },
@@ -173,7 +175,9 @@ return {
       }
     },
 
-    config = true,
+    config = {
+      watch_for_changes = true
+    },
   },
 
 }
