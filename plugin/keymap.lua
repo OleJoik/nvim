@@ -59,26 +59,6 @@ vim.keymap.set("n", "<leader>t-", ":-tabmove<CR>", { noremap = true })
 -- move current tab to next position
 vim.keymap.set("n", "<leader>t+", ":+tabmove<CR>", { noremap = true })
 
-local rename_tab = function()
-  local new_name = vim.fn.input("New Tab Name: ")
-  if new_name and new_name ~= "" then
-    local tabnr = vim.api.nvim_get_current_tabpage()
-    vim.cmd("Tabby rename_tab " .. new_name)
-  else
-    print("Tab renaming canceled or invalid name.")
-  end
-end
-vim.keymap.set("n", "<leader>tr", rename_tab, { desc = "[R]ename tab" })
-for i = 1, 9 do
-  vim.keymap.set("n", "<A-" .. i .. ">", function()
-    local tab_count = vim.fn.tabpagenr('$') -- Get the total number of tabs
-    if i <= tab_count then
-      vim.cmd("tabn " .. i)                 -- Switch to tab i
-    else
-      print("Tab " .. i .. " does not exist!")
-    end
-  end, { noremap = true, silent = true })
-end
 
 -- Search for whatever is selected
 vim.keymap.set("v", "/", 'y/\\V<C-R>"<CR><S-n>', { noremap = true })

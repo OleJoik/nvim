@@ -24,7 +24,5 @@ vim.cmd([[
 vim.opt.list = true
 vim.opt.listchars = { space = "·", eol = "↵", tab = "»·" }
 
-vim.o.showtabline = 2
-
 -- Do not show a global status line
 vim.o.laststatus = 0
