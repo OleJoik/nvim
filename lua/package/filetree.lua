@@ -13,7 +13,7 @@ function _G.get_oil_winbar()
     rel_path = ''
   end
 
-  return string.rep(" ", gutter_width - 4) .. "[  " .. cwd_basename .. " ] " .. rel_path
+  return string.rep(" ", gutter_width - 2) .. "[  " .. cwd_basename .. " ] " .. rel_path
 end
 
 return {
