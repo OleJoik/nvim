@@ -10,6 +10,7 @@ vim.wo.number = true
 vim.o.clipboard = "unnamedplus"
 
 vim.o.mouse = "a"
+vim.o.winbar = "      %{%v:lua.get_oil_winbar()%} %m%h"
 
 vim.o.undofile = true
 

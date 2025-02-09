@@ -1,7 +1,6 @@
 function _G.get_oil_winbar()
   local cwd = vim.fn.getcwd()
   local cwd_basename = vim.fn.fnamemodify(cwd, ':t')
-  local gutter_width = vim.fn.getwininfo(vim.api.nvim_get_current_win())[1].textoff
   local oil_path = vim.fn.expand('%:p'):gsub("^oil://", "")
   local rel_path = vim.fn.fnamemodify(oil_path, ':~:.')
 
@@ -13,7 +12,7 @@ function _G.get_oil_winbar()
     rel_path = ''
   end
 
-  return string.rep(" ", gutter_width - 2) .. "[  " .. cwd_basename .. " ] " .. rel_path
+  return "[  " .. cwd_basename .. " ] " .. rel_path
 end
 
 return {
@@ -162,10 +161,10 @@ return {
             },
 
             win_options = {
-              winbar = "%!v:lua.get_oil_winbar()",
+              winbar = " [g?] %{%v:lua.get_oil_winbar()%}",
               signcolumn = "yes:2",
-              foldcolumn = "0",
-              number = false
+              foldcolumn = "2",
+              number = true
             },
 
           })
