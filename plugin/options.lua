@@ -10,7 +10,9 @@ vim.wo.number = true
 vim.o.clipboard = "unnamedplus"
 
 vim.o.mouse = "a"
-vim.o.winbar = "      %{%v:lua.get_oil_winbar()%} %m%h"
+
+-- Winbar set with autocommand instead, to avoid settings it for neotree, terminals, etc
+-- vim.o.winbar =
 
 vim.o.undofile = true
 
