@@ -143,8 +143,9 @@ return {
             keymaps = {
               ["g?"] = { "actions.show_help", mode = "n" },
               ["<CR>"] = "actions.select",
-              ["<C-s>"] = { "actions.select", opts = { vertical = true } },
-              ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
+              ["<C-h>"] = false,
+              ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+              ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
               ["<C-t>"] = { "actions.select", opts = { tab = true } },
               ["<C-p>"] = false,
               ["<C-c>"] = { "actions.close", mode = "n" },
@@ -162,9 +163,9 @@ return {
 
             win_options = {
               winbar = " [g?] %{%v:lua.get_oil_winbar()%}",
-              signcolumn = "yes:2",
-              foldcolumn = "2",
-              number = true
+              signcolumn = "yes:3",
+              foldcolumn = "4",
+              number = false
             },
 
           })
