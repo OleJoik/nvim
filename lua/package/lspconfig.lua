@@ -1,4 +1,24 @@
 _G.skip_formatting_buffers = {}
+_G.auto_format_on_save = true
+
+function ToggleFormatOnSave()
+  _G.auto_format_on_save = not _G.auto_format_on_save
+end
+
+vim.keymap.set("n", "<leader>ft", ToggleFormatOnSave, { desc = "[T]oggle Format on Save", noremap = true, silent = true })
+
+local function should_format(buf)
+  if _G.auto_format_on_save == false then
+    return false
+  end
+
+  if _G.skip_formatting_buffers[buf] == true then
+    return false
+  end
+
+  return true
+end
+
 
 
 vim.keymap.set("n", "<leader>S", function()
@@ -206,7 +226,7 @@ return {
             vim.api.nvim_create_autocmd('BufWritePre', {
               buffer = args.buf,
               callback = function()
-                if _G.skip_formatting_buffers[args.buf] == true then
+                if should_format(args.buf) == false then
                   return
                 end
 
@@ -220,7 +240,7 @@ return {
             vim.api.nvim_create_autocmd("BufWritePre", {
               buffer = args.buf,
               callback = function()
-                if not _G.skip_formatting_buffers[args.buf] then
+                if should_format(args.buf) then
                   vim.lsp.buf.format({ async = false })
                 end
               end,
