@@ -1,4 +1,8 @@
 function _G.get_oil_winbar()
+  if _G.statusline_enabled == false then
+    return ""
+  end
+
   local cwd = vim.fn.getcwd()
   local cwd_basename = vim.fn.fnamemodify(cwd, ':t')
   local oil_path = vim.fn.expand('%:p'):gsub("^oil://", "")

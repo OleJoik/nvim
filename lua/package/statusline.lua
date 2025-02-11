@@ -1,15 +1,19 @@
-local statusline_enabled = true
+_G.statusline_enabled = true
 
 function ToggleStatusline()
   if statusline_enabled then
+    vim.o.foldcolumn = "0"
+    vim.wo.number = false
     vim.o.laststatus = 0
   else
+    vim.o.foldcolumn = "1"
+    vim.wo.number = true
     vim.o.laststatus = 2
   end
-  statusline_enabled = not statusline_enabled
+  _G.statusline_enabled = not _G.statusline_enabled
 end
 
-vim.keymap.set("n", "<leader>ss", ToggleStatusline, { desc = "[S]tatusline toggle", noremap = true, silent = true })
+vim.keymap.set("n", "<leader>s", ToggleStatusline, { desc = "[S]tatusline toggle", noremap = true, silent = true })
 
 function FormatOnSave()
   if _G.auto_format_on_save then
@@ -29,7 +33,7 @@ return { {
     require('lualine').setup({
       sections = {
         lualine_a = { 'branch' },
-        lualine_b = { 'diff', 'diagnostics' },
+        lualine_b = { 'diff' },
         lualine_c = { 'diagnostics' },
         lualine_x = { FormatOnSave },
         lualine_y = { 'encoding' },
