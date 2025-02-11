@@ -18,6 +18,12 @@ require("lazy").setup({
   { import = "package" },
   "famiu/bufdelete.nvim",
   "mg979/vim-visual-multi",
+  {
+    "folke/ts-comments.nvim", -- Excellent plugin that among other things fixes comments in tsx files
+    opts = {},
+    event = "VeryLazy",
+    enabled = vim.fn.has("nvim-0.10.0") == 1,
+  }
   -- "OleJoik/diff.nvim",
   -- { "OleJoik/resize-border.nvim", opts = {} }
 }, {

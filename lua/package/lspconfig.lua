@@ -172,6 +172,7 @@ return {
       local capabilities = require("blink.cmp").get_lsp_capabilities()
       require("lspconfig").lua_ls.setup({ capabilities = capabilities, on_attach = on_attach, })
       require("lspconfig").ts_ls.setup({ capabilities = capabilities, on_attach = on_attach })
+      require("lspconfig").eslint.setup({ capabilities = capabilities, on_attach = on_attach })
       require("lspconfig").ruff.setup({
         init_options = {
           settings = {
@@ -234,7 +235,9 @@ return {
     config = function()
       local null_ls = require("null-ls")
 
-      local sources = {}
+      local sources = {
+        null_ls.builtins.formatting.prettierd
+      }
 
       if vim.fn.executable("mypy") == 1 then
         print("mypy is loaded with null-ls")
