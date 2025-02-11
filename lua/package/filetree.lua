@@ -126,58 +126,47 @@ return {
     end,
   },
   {
-    "OleJoik/oil-git-status.nvim",
-    branch = "fs-events",
+    'stevearc/oil.nvim',
     dependencies = {
-      {
-        'stevearc/oil.nvim',
-        dependencies = {
-          { "echasnovski/mini.icons", opts = {} },
+      { "echasnovski/mini.icons", opts = {} },
+    },
+    config = function()
+      require("oil").setup({
+        default_file_explorer = true,
+        skip_confirm_for_simple_edits = true,
+        watch_for_changes = true,
+        columns = {},
+        keymaps = {
+          ["g?"] = { "actions.show_help", mode = "n" },
+          ["<CR>"] = "actions.select",
+          ["<C-h>"] = false,
+          ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+          ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
+          ["<C-t>"] = { "actions.select", opts = { tab = true } },
+          ["<C-p>"] = false,
+          ["<C-c>"] = { "actions.close", mode = "n" },
+          ["<C-l>"] = false,
+          ["<C-r>"] = "actions.refresh",
+          ["-"] = { "actions.parent", mode = "n" },
+          ["_"] = { "actions.open_cwd", mode = "n" },
+          ["`"] = { "actions.cd", mode = "n" },
+          ["~"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
+          ["gs"] = false,
+          ["gx"] = "actions.open_external",
+          ["th"] = { "actions.toggle_hidden", mode = "n" },
+          ["g\\"] = { "actions.toggle_trash", mode = "n" },
         },
-        config = function()
-          require("oil").setup({
-            default_file_explorer = true,
-            skip_confirm_for_simple_edits = true,
-            watch_for_changes = true,
-            columns = {},
-            keymaps = {
-              ["g?"] = { "actions.show_help", mode = "n" },
-              ["<CR>"] = "actions.select",
-              ["<C-h>"] = false,
-              ["<C-v>"] = { "actions.select", opts = { vertical = true } },
-              ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
-              ["<C-t>"] = { "actions.select", opts = { tab = true } },
-              ["<C-p>"] = false,
-              ["<C-c>"] = { "actions.close", mode = "n" },
-              ["<C-l>"] = false,
-              ["<C-r>"] = "actions.refresh",
-              ["-"] = { "actions.parent", mode = "n" },
-              ["_"] = { "actions.open_cwd", mode = "n" },
-              ["`"] = { "actions.cd", mode = "n" },
-              ["~"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
-              ["gs"] = false,
-              ["gx"] = "actions.open_external",
-              ["th"] = { "actions.toggle_hidden", mode = "n" },
-              ["g\\"] = { "actions.toggle_trash", mode = "n" },
-            },
 
-            win_options = {
-              winbar = " [g?] %{%v:lua.get_oil_winbar()%}",
-              signcolumn = "yes:3",
-              foldcolumn = "4",
-              number = false
-            },
+        win_options = {
+          winbar = " [g?] %{%v:lua.get_oil_winbar()%}",
+          signcolumn = "yes:3",
+          foldcolumn = "4",
+          number = false
+        },
 
-          })
+      })
 
-          vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-        end
-      }
-    },
-
-    config = {
-      watch_for_changes = true
-    },
-  },
-
+      vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+    end
+  }
 }
