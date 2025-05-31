@@ -90,7 +90,42 @@ function M.find_venvs(start_path)
     end
   end
 
+  local function walk_down(root_path, max_depth)
+    max_depth = max_depth or 4
+    local function recurse(path, depth)
+      if depth > max_depth then return end
+
+      local handle = uv.fs_scandir(path)
+      if not handle then return end
+
+      while true do
+        local name, typ = uv.fs_scandir_next(handle)
+        if not name then break end
+
+        local child_path = path .. "/" .. name
+
+        if typ == "directory" then
+          local candidate = vim.fn.resolve(vim.fn.fnamemodify(child_path, ":p"))
+          if (name == ".venv" or name == "venv" or name == ".env")
+              and vim.fn.isdirectory(candidate) == 1
+              and is_venv(candidate)
+              and not seen_paths[candidate] then
+            table.insert(candidates, { label = candidate, path = candidate })
+            seen_paths[candidate] = true
+          end
+
+          recurse(child_path, depth + 1)
+        end
+      end
+    end
+
+    recurse(root_path, 0)
+  end
+
+  -- Perform both searches
   walk_up(start_path)
+  walk_down(vim.fn.getcwd(), 4)
+
   return candidates
 end
 
