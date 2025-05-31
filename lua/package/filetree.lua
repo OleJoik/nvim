@@ -1,8 +1,4 @@
 function _G.get_oil_winbar()
-  if _G.statusline_enabled == false then
-    return ""
-  end
-
   local cwd = vim.fn.getcwd()
   local cwd_basename = vim.fn.fnamemodify(cwd, ':t')
   local oil_path = vim.fn.expand('%:p'):gsub("^oil://", "")
@@ -18,6 +14,19 @@ function _G.get_oil_winbar()
 
   return "[  " .. cwd_basename .. " ] " .. rel_path
 end
+
+local hidden_files = {
+  ".git",
+  ".next",
+  "node_modules",
+  "__pycache__",
+  ".pytest_cache",
+  ".venv",
+  ".devenv",
+  ".direnv",
+  ".mypy_cache",
+  ".ruff_cache",
+}
 
 return {
   {
@@ -79,21 +88,7 @@ return {
             show_hidden_count = true,
             hide_dotfiles = false,
             hide_gitignored = false,
-            hide_by_name = {
-              ".git",
-              ".next",
-              "node_modules",
-              "__pycache__",
-              ".pytest_cache",
-              ".venv",
-              ".devenv",
-              ".direnv",
-              ".mypy_cache",
-              ".ruff_cache",
-
-              -- '.DS_Store',
-              -- 'thumbs.db',
-            },
+            hide_by_name = hidden_files,
             never_show = {},
           },
         },
@@ -159,15 +154,33 @@ return {
           ["gx"] = "actions.open_external",
           ["th"] = { "actions.toggle_hidden", mode = "n" },
           ["g\\"] = { "actions.toggle_trash", mode = "n" },
+          ["H"] = {
+            callback = function()
+              require("oil").toggle_hidden()
+            end,
+            mode = "n"
+          },
         },
 
         win_options = {
-          winbar = " [g?] %{%v:lua.get_oil_winbar()%}",
+          winbar = " [g?]%{%v:lua.get_oil_winbar()%}",
           signcolumn = "yes:3",
           foldcolumn = "4",
           number = false
         },
 
+        view_options = {
+          show_hidden = false,
+          is_hidden_file = function(name, bufnr)
+            for _, hide_name in ipairs(hidden_files) do
+              if name == hide_name then
+                return true
+              end
+            end
+
+            return false
+          end,
+        }
       })
 
       vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })

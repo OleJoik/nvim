@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd({ "VimEnter", "BufWinEnter" }, {
   callback = function()
     if vim.bo.buftype == "" then
       -- Winbar set with autocommand to avoid settings it for neotree, terminals, etc
-      vim.wo.winbar = "      %{%v:lua.get_oil_winbar()%} %m%h"
+      vim.wo.winbar = "     %{%v:lua.get_oil_winbar()%} %m%h"
     end
   end,
 })

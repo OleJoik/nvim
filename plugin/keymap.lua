@@ -1,4 +1,4 @@
-vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>")
+-- vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>")
 
 -- Because terminals can't be closed with wqa...
 vim.cmd [[cabbrev wqa wa\|qa]]

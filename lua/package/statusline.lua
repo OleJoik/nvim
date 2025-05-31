@@ -23,6 +23,29 @@ function FormatOnSave()
   return " fmt  "
 end
 
+function Venv()
+  local filetype = vim.bo.filetype
+  local python_path = vim.fn.exepath("python")
+  if python_path == '' then
+    return ""
+  end
+
+  -- Check if this python is from a venv (look for pyvenv.cfg)
+  local bin_dir = vim.fn.fnamemodify(python_path, ":h")
+  local venv_dir = vim.fn.fnamemodify(bin_dir, ":h")
+  local pyvenv_cfg = venv_dir .. "/pyvenv.cfg"
+
+  local is_venv = vim.fn.filereadable(pyvenv_cfg) == 1
+
+  if not is_venv and filetype ~= "python" then
+    return ""
+  end
+
+  local parent = vim.fn.fnamemodify(venv_dir, ":h:t")
+  local name = vim.fn.fnamemodify(venv_dir, ":t")
+  return string.format(" %s/%s", parent, name)
+end
+
 return { {
   'nvim-lualine/lualine.nvim',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -30,20 +53,23 @@ return { {
     -- Disable showing mode messages in command line (lualine gots it!)
     -- vim.opt.showmode = false
 
+    -- Disables the % of file and row/column from command line
+    vim.opt.ruler = false
+
     require('lualine').setup({
       sections = {
         lualine_a = { 'branch' },
         lualine_b = { 'diff' },
         lualine_c = { 'diagnostics' },
-        lualine_x = { FormatOnSave },
+        lualine_x = { Venv, FormatOnSave, },
         lualine_y = { 'encoding' },
         lualine_z = { 'location' }
       },
       inactive_sections = {
         lualine_a = {},
         lualine_b = {},
-        lualine_c = { 'filename' },
-        lualine_x = { 'location' },
+        lualine_c = {},
+        lualine_x = {},
         lualine_y = {},
         lualine_z = {}
       },
