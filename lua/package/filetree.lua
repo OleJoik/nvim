@@ -13,6 +13,12 @@ function _G.get_oil_winbar()
   end
 
   return "[  " .. cwd_basename .. " ] " .. rel_path
+
+  -- local win = vim.api.nvim_get_current_win()
+  -- local buf = vim.api.nvim_win_get_buf(win)
+
+  -- return "[  " ..
+  --     cwd_basename .. " ] " .. rel_path .. " | Win " .. win .. " | Buf " .. buf
 end
 
 local hidden_files = {
