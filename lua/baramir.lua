@@ -1,7 +1,7 @@
----@alias State { windows: table<string, WindowState|nil> }
+---@alias BufferState { active: boolean, filename: string }
+---@alias FloatState { win_id: integer, buffer: integer }
 ---@alias WindowState { buffers: table<string, BufferState|nil>, float: FloatState|nil }
----@alias FloatState { window: integer, buffer: integer }
----@alias BufferState { active: boolean }
+---@alias State { windows: table<string, WindowState|nil> }
 
 ---@type State
 M._state = { windows = {} }
@@ -10,19 +10,51 @@ function M.state()
   return M._state
 end
 
+local function _is_normal_buffer(bufnr)
+  if vim.bo[bufnr].buflisted == 0 then
+    return false
+  end
+
+  -- Skip special buftypes (like terminal, quickfix, etc)
+  local buftype = vim.bo[bufnr].buftype
+  if buftype ~= "" then
+    return false
+  end
+
+  local filetype = vim.bo[bufnr].filetype
+  local skip_filetypes = {
+    ["oil"] = true,
+    ["NvimTree"] = true,
+    ["neo-tree"] = true,
+    ["toggleterm"] = true,
+    ["alpha"] = true,
+    ["lazy"] = true,
+    ["Outline"] = true,
+    ["fugitive"] = true,
+    ["qf"] = true,
+    ["help"] = true,
+  }
+
+  if skip_filetypes[filetype] then
+    return false
+  end
+
+  return true
+end
+
 function M._create_float(win_id)
   local float_buf = vim.api.nvim_create_buf(false, true) -- [listed=false, scratch=true]
   local parent_width = vim.api.nvim_win_get_width(win_id)
-  vim.api.nvim_buf_set_lines(float_buf, 0, -1, false, { "Info", "Status" })
+  vim.api.nvim_buf_set_lines(float_buf, 0, -1, false, {})
 
   local float_win = vim.api.nvim_open_win(float_buf, false, {
     relative = "win",
     win = win_id,
     anchor = "NE",
-    row = -1,
+    row = 0,
     col = parent_width,
     width = 20,
-    height = 2,
+    height = 1,
     focusable = false
   })
 
@@ -34,11 +66,16 @@ function M._create_float(win_id)
   vim.api.nvim_set_option_value("cursorcolumn", false, { win = float_win })
   vim.api.nvim_set_option_value("spell", false, { win = float_win })
   vim.api.nvim_set_option_value("wrap", false, { win = float_win })
-  return { window = float_win, buffer = float_buf }
+  return { win_id = float_win, buffer = float_buf }
 end
 
 function M.register(win_id, buf_id)
   if vim.fn.win_gettype(win_id) ~= "" then
+    return
+  end
+
+
+  if _is_normal_buffer(buf_id) == false then
     return
   end
 
@@ -47,13 +84,18 @@ function M.register(win_id, buf_id)
 
   local float = M._create_float(win_id)
 
-  M._state.windows[w] = { buffers = { [b] = { active = true } }, float = float }
+  local full_name = vim.api.nvim_buf_get_name(buf_id)
+  local filename = vim.fn.fnamemodify(full_name, ":t")
+
+  if M._state.windows[w] == nil then
+    M._state.windows[w] = { buffers = { [b] = { active = true, filename = filename } }, float = float }
+  else
+    M._state.windows[w].buffers[b] = { active = true, filename = filename }
+  end
+
   M._set_active(w, b)
 end
 
--- Includes guards in case window/buffer isn't already registered
--- Might want to log these cases to look for errors..
--- Errors would be cases when the user attempts to activate a buffer not in baramir.
 function M.activate(win_id, buf_id)
   local w = tostring(win_id)
   local b = tostring(buf_id)
@@ -75,7 +117,7 @@ function M.close_win(win_id)
     return
   end
   if M._state.windows[w].float ~= nil then
-    vim.api.nvim_win_close(M._state.windows[w].float.window, true)
+    vim.api.nvim_win_close(M._state.windows[w].float.win_id, true)
   end
   M._state.windows[w] = nil
 end
@@ -89,6 +131,7 @@ function M._set_active(w, b)
   end
 
   M._state.windows[w].buffers[b].active = true
+  M.render_floats()
 end
 
 function M.update_float_position(win_id)
@@ -98,13 +141,26 @@ function M.update_float_position(win_id)
   end
 
   local parent_width = vim.api.nvim_win_get_width(win_id)
-  local float_id = M._state.windows[w].float.window
+  local float_id = M._state.windows[w].float.win_id
   if float_id == nil then
     return
   end
   local cfg = vim.api.nvim_win_get_config(float_id)
   cfg.col = parent_width
-  vim.api.nvim_win_set_config(M._state.windows[w].float.window, cfg)
+  vim.api.nvim_win_set_config(M._state.windows[w].float.win_id, cfg)
+end
+
+function M.render_floats()
+  for _, window in pairs(M._state.windows) do
+    local bufs = {}
+    for _, buf in pairs(window.buffers) do
+      table.insert(bufs, buf.filename)
+    end
+    vim.api.nvim_buf_set_lines(window.float.buffer, 0, -1, false, bufs)
+    local cfg = vim.api.nvim_win_get_config(window.float.win_id)
+    cfg.height = #bufs
+    vim.api.nvim_win_set_config(window.float.win_id, cfg)
+  end
 end
 
 return M

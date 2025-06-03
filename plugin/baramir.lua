@@ -1,11 +1,14 @@
 ENABLE = false
 
+vim.api.nvim_create_user_command("Bara", function()
+  print(vim.inspect(require("baramir").state()))
+end, {})
+
+vim.api.nvim_create_user_command("BaraRender", function()
+  require("baramir").render_floats()
+end, {})
+
 if ENABLE then
-  vim.api.nvim_create_user_command("Bara", function()
-    print(vim.inspect(require("baramir").state()))
-  end, {})
-
-
   vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
     callback = function()
       local win_id = vim.api.nvim_get_current_win()
