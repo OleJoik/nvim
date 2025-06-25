@@ -6,13 +6,13 @@ function _G.get_oil_winbar()
 
 
   if not rel_path:match("^[/~]") and rel_path ~= "" then
-    rel_path = "./" .. rel_path
+    rel_path = "/" .. rel_path
   end
   if rel_path == '' or rel_path == '.' then
     rel_path = ''
   end
 
-  return "[  " .. cwd_basename .. " ] " .. rel_path
+  return "[ " .. cwd_basename .. rel_path .. " ]"
 
   -- local win = vim.api.nvim_get_current_win()
   -- local buf = vim.api.nvim_win_get_buf(win)

@@ -30,6 +30,18 @@ vim.keymap.set("n", "<A-j>", [[<C-w>J]], opts)
 vim.keymap.set("n", "<A-k>", [[<C-w>K]], opts)
 vim.keymap.set("n", "<A-l>", [[<C-w>x<C-w>l]], opts)
 vim.keymap.set("n", "<A-m>", [[<C-w>T]], opts)
+vim.keymap.set("n", "<leader>h", function()
+  require("icebar").move_current_buf("left")
+end, opts)
+vim.keymap.set("n", "<leader>j", function()
+  require("icebar").move_current_buf("down")
+end, opts)
+vim.keymap.set("n", "<leader>k", function()
+  require("icebar").move_current_buf("up")
+end, opts)
+vim.keymap.set("n", "<leader>l", function()
+  require("icebar").move_current_buf("right")
+end, opts)
 -- moving windows while in terminal mode (aborts terminal mode...)
 vim.keymap.set("t", "<A-h>", [[<C-\><C-n><C-w>h<C-w>xa]], opts)
 vim.keymap.set("t", "<A-j>", [[<C-\><C-n><C-w>Ja]], opts)
@@ -45,7 +57,14 @@ vim.keymap.set("x", "<", "<gv")
 -- Closing windows/buffers
 vim.keymap.set("n", "<C-q>", function() vim.cmd("q") end, { noremap = true, silent = true })
 vim.keymap.set("t", "<C-q>", [[<C-\><C-n><C-w>c]], opts)
-vim.keymap.set("n", "<C-x>", function() vim.cmd("Bwipeout") end, { noremap = true, silent = true })
+vim.keymap.set("n", "<C-x>", function()
+  local bara = require("icebar")
+  if bara.is_window_registered() then
+    bara.close_buf()
+  else
+    vim.cmd("Bwipeout")
+  end
+end, { noremap = true, silent = true })
 
 
 -- Key bindings for tabs
@@ -78,7 +97,14 @@ end
 vim.keymap.set("n", "<leader><leader>x", ExecuteFile, { desc = "Execute the current file" })
 
 -- Toggle previous buffer
-vim.keymap.set("n", "<Tab>", ":b#<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Tab>", function()
+  local bara = require("icebar")
+  if bara.is_window_registered(nil) then
+    bara.toggle_buffer_in_window()
+  else
+    vim.cmd("b#<CR>")
+  end
+end, { noremap = true, silent = true })
 
 -- Git
 vim.keymap.set("n", "<C-g><C-l>", ":LazyGit<CR>", { desc = "[L]azygit" })
