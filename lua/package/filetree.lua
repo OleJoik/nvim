@@ -1,26 +1,3 @@
-function _G.get_oil_winbar()
-  local cwd = vim.fn.getcwd()
-  local cwd_basename = vim.fn.fnamemodify(cwd, ':t')
-  local oil_path = vim.fn.expand('%:p'):gsub("^oil://", "")
-  local rel_path = vim.fn.fnamemodify(oil_path, ':~:.')
-
-
-  if not rel_path:match("^[/~]") and rel_path ~= "" then
-    rel_path = "/" .. rel_path
-  end
-  if rel_path == '' or rel_path == '.' then
-    rel_path = ''
-  end
-
-  return "[ " .. cwd_basename .. rel_path .. " ]"
-
-  -- local win = vim.api.nvim_get_current_win()
-  -- local buf = vim.api.nvim_win_get_buf(win)
-
-  -- return "[  " ..
-  --     cwd_basename .. " ] " .. rel_path .. " | Win " .. win .. " | Buf " .. buf
-end
-
 local hidden_files = {
   ".git",
   ".next",
@@ -169,7 +146,7 @@ return {
         },
 
         win_options = {
-          winbar = " [g?]%{%v:lua.get_oil_winbar()%}",
+          winbar = " ",
           signcolumn = "yes:3",
           foldcolumn = "4",
           number = false

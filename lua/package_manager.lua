@@ -16,7 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   { import = "package" },
-  "OleJoik/icebar.nvim",
+  { "OleJoik/icebar.nvim", opts = { enabled = true, max_tabs = 3 } },
   "famiu/bufdelete.nvim",
   "mg979/vim-visual-multi",
   {
