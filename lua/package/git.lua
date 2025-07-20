@@ -1,14 +1,12 @@
-return { {
-  "kdheepak/lazygit.nvim",
-  config = function()
-    vim.g.lazygit_floating_window_scaling_factor = 0.95
-    vim.cmd [[
-      if has('nvim') && executable('nvr')
-        let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
-      endif
-    ]]
-  end
-},
+return {
+  {
+    "kdheepak/lazygit.nvim",
+    branch = "main",
+    commit = "77a0d42943d8265271e6e6beaed72da54eeb17e7",
+    config = function()
+      vim.g.lazygit_floating_window_scaling_factor = 0.95
+    end
+  },
   {
     "FabijanZulj/blame.nvim",
     lazy = false,
