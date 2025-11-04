@@ -217,37 +217,20 @@ return {
         capabilities = capabilities,
       })
 
-      vim.api.nvim_create_autocmd("BufWritePre", {
+      vim.api.nvim_create_autocmd("BufWritePost", {
         pattern = "*.hcl",
         callback = function()
-          local buf = vim.api.nvim_get_current_buf()
-          local filename = vim.api.nvim_buf_get_name(buf)
+          local filename = vim.api.nvim_buf_get_name(0)
           if filename == "" then return end
 
-          -- Format the file on disk
           local result = vim.fn.system({ "terragrunt", "hclfmt", "--terragrunt-hclfmt-file", filename })
           if vim.v.shell_error ~= 0 then
             vim.notify("terragrunt hclfmt failed:\n" .. result, vim.log.levels.ERROR)
             return
           end
 
-          -- Read formatted lines from disk
-          local formatted = vim.fn.readfile(filename)
-          if not formatted or #formatted == 0 then
-            vim.notify("Failed to read formatted file: " .. filename, vim.log.levels.ERROR)
-            return
-          end
-
-          -- Save current cursor position
-          local cursor = vim.api.nvim_win_get_cursor(0)
-
-          -- Replace buffer contents
-          vim.api.nvim_buf_set_lines(buf, 0, -1, false, formatted)
-
-          -- Restore cursor position (clamped if file shrank)
-          local line_count = vim.api.nvim_buf_line_count(buf)
-          if cursor[1] > line_count then cursor[1] = line_count end
-          vim.api.nvim_win_set_cursor(0, cursor)
+          -- Tell Neovim the file changed externally — reload silently
+          vim.cmd("checktime")
         end,
       })
 
