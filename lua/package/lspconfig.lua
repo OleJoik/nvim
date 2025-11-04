@@ -220,35 +220,51 @@ return {
       vim.api.nvim_create_autocmd("BufWritePre", {
         pattern = "*.hcl",
         callback = function()
-          local filename = vim.api.nvim_buf_get_name(0)
+          local buf = vim.api.nvim_get_current_buf()
+          local filename = vim.api.nvim_buf_get_name(buf)
           if filename == "" then return end
-          vim.fn.jobstart({ "terragrunt", "hclfmt", "--terragrunt-hclfmt-file", filename }, {
-            on_exit = function()
-              vim.schedule(function()
-                vim.cmd("edit!") -- reload the file to apply formatted changes
-              end)
-            end,
-          })
+
+          -- Format the file on disk
+          local result = vim.fn.system({ "terragrunt", "hclfmt", "--terragrunt-hclfmt-file", filename })
+          if vim.v.shell_error ~= 0 then
+            vim.notify("terragrunt hclfmt failed:\n" .. result, vim.log.levels.ERROR)
+            return
+          end
+
+          -- Read formatted lines from disk
+          local formatted = vim.fn.readfile(filename)
+          if not formatted or #formatted == 0 then
+            vim.notify("Failed to read formatted file: " .. filename, vim.log.levels.ERROR)
+            return
+          end
+
+          -- Save current cursor position
+          local cursor = vim.api.nvim_win_get_cursor(0)
+
+          -- Replace buffer contents
+          vim.api.nvim_buf_set_lines(buf, 0, -1, false, formatted)
+
+          -- Restore cursor position (clamped if file shrank)
+          local line_count = vim.api.nvim_buf_line_count(buf)
+          if cursor[1] > line_count then cursor[1] = line_count end
+          vim.api.nvim_win_set_cursor(0, cursor)
         end,
       })
 
       vim.api.nvim_create_autocmd("BufWritePre", {
         pattern = { "*.tf" },
         callback = function()
-          local filename = vim.api.nvim_buf_get_name(0)
-          if filename == "" then return end
+          local buf = vim.api.nvim_get_current_buf()
+          local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+          local text = table.concat(lines, "\n")
+          local fmt_cmd = "terraform fmt -"
 
-          vim.fn.jobstart({ "terraform", "fmt", filename }, {
-            on_exit = function(_, code)
-              if code == 0 then
-                vim.schedule(function()
-                  vim.cmd("edit!") -- reload buffer after formatting
-                end)
-              else
-                vim.notify("Formatting failed for " .. filename, vim.log.levels.WARN)
-              end
-            end,
-          })
+          local output = vim.fn.systemlist(fmt_cmd, text)
+          if vim.v.shell_error == 0 then
+            vim.api.nvim_buf_set_lines(buf, 0, -1, false, output)
+          else
+            vim.notify(fmt_cmd .. " failed", vim.log.levels.ERROR)
+          end
         end,
       })
 
