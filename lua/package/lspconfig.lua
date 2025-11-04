@@ -217,6 +217,41 @@ return {
         capabilities = capabilities,
       })
 
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = "*.hcl",
+        callback = function()
+          local filename = vim.api.nvim_buf_get_name(0)
+          if filename == "" then return end
+          vim.fn.jobstart({ "terragrunt", "hclfmt", "--terragrunt-hclfmt-file", filename }, {
+            on_exit = function()
+              vim.schedule(function()
+                vim.cmd("edit!") -- reload the file to apply formatted changes
+              end)
+            end,
+          })
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = { "*.tf" },
+        callback = function()
+          local filename = vim.api.nvim_buf_get_name(0)
+          if filename == "" then return end
+
+          vim.fn.jobstart({ "terraform", "fmt", filename }, {
+            on_exit = function(_, code)
+              if code == 0 then
+                vim.schedule(function()
+                  vim.cmd("edit!") -- reload buffer after formatting
+                end)
+              else
+                vim.notify("Formatting failed for " .. filename, vim.log.levels.WARN)
+              end
+            end,
+          })
+        end,
+      })
+
 
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
