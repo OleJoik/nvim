@@ -219,7 +219,10 @@ return {
 
       vim.api.nvim_create_autocmd("BufWritePost", {
         pattern = "*.hcl",
-        callback = function()
+        callback = function(args)
+          if should_format(args.buf) == false then
+            return
+          end
           local filename = vim.api.nvim_buf_get_name(0)
           if filename == "" then return end
 
@@ -236,7 +239,10 @@ return {
 
       vim.api.nvim_create_autocmd("BufWritePre", {
         pattern = { "*.tf" },
-        callback = function()
+        callback = function(args)
+          if should_format(args.buf) == false then
+            return
+          end
           local buf = vim.api.nvim_get_current_buf()
           local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
           local text = table.concat(lines, "\n")
