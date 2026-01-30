@@ -20,7 +20,7 @@ require("lazy").setup({
   "famiu/bufdelete.nvim",
   "mg979/vim-visual-multi",
   {
-    "folke/ts-comments.nvim", -- Excellent plugin that among other things fixes comments in tsx files
+    "folke/ts-comments.nvim", -- Among other things, fixes comments in tsx files
     opts = {},
     event = "VeryLazy",
     enabled = vim.fn.has("nvim-0.10.0") == 1,

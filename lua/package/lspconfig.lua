@@ -226,7 +226,7 @@ return {
           local filename = vim.api.nvim_buf_get_name(0)
           if filename == "" then return end
 
-          local result = vim.fn.system({ "terragrunt", "hclfmt", "--terragrunt-hclfmt-file", filename })
+          local result = vim.fn.system({ "terragrunt", "hcl", "fmt", "--file", filename })
           if vim.v.shell_error ~= 0 then
             vim.notify("terragrunt hclfmt failed:\n" .. result, vim.log.levels.ERROR)
             return
@@ -319,25 +319,25 @@ return {
       })
     end,
   },
-  {
-    "nvimtools/none-ls.nvim",
-    config = function()
-      local null_ls = require("null-ls")
-
-      local sources = {
-        null_ls.builtins.formatting.prettierd
-      }
-
-      if vim.fn.executable("mypy") == 1 then
-        print("mypy is loaded with null-ls")
-        table.insert(sources, null_ls.builtins.diagnostics.mypy)
-      end
-
-      if #sources > 0 then
-        null_ls.setup({
-          sources = sources,
-        })
-      end
-    end
-  }
+  -- {
+  --   "nvimtools/none-ls.nvim",
+  --   config = function()
+  --     local null_ls = require("null-ls")
+  --
+  --     local sources = {
+  --       null_ls.builtins.formatting.prettierd
+  --     }
+  --
+  --     if vim.fn.executable("mypy") == 1 then
+  --       print("mypy is loaded with null-ls")
+  --       table.insert(sources, null_ls.builtins.diagnostics.mypy)
+  --     end
+  --
+  --     if #sources > 0 then
+  --       null_ls.setup({
+  --         sources = sources,
+  --       })
+  --     end
+  --   end
+  -- }
 }
